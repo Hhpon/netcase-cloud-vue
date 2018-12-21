@@ -11,7 +11,7 @@
         <li
           v-for="(img,indexNum) in imgs"
           v-show="indexNum === mark"
-          :key="indexNum"
+          :key="img.encodeId"
           @mouseenter="stop"
           @mouseleave="go"
         >
@@ -41,13 +41,12 @@ export default {
     };
   },
   created() {
-    // this.getImgs();
+    this.getImgs();
   },
   mounted() {
     this.$nextTick(() => {
       this.timer = setInterval(this.autoplay, 3000);
     });
-    console.log(this.$refs.carousel);
   },
   methods: {
     getImgs() {
