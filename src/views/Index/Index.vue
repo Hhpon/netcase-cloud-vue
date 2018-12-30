@@ -7,7 +7,6 @@
 <script>
 import Header from "../../components/Header/Header.vue";
 import Tab from "../../components/Tab/Tab.vue";
-import axios from "axios";
 export default {
   components: {
     Header,
