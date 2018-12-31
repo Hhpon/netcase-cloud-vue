@@ -20,9 +20,20 @@ export default {
                     artists.forEach(element => {
                         // artists_arr.push(element.name);
                         let pin = pinyin(element.name)
-                        console.log(pin);
+                        // console.log(pin);
                     });
                     //   artists_arr.sort(pinyin.compare);
+
+                    // const data = '我要排序'.split('');
+                    // const pinyinData = data.map(han => ({
+                    //     han: han,
+                    //     pinyin: pinyin(han)[0][0], // 可以自行选择不同的生成拼音方案和风格。
+                    // }));
+                    // const sortedData = pinyinData.sort((a, b) => {
+                    //     return a.pinyin.localeCompare(b.pinyin);
+                    // }).map(d => d.han);
+                    // console.log(sortedData);
+
                     commit('getSingerM', artists_arr)
                 });
         }
