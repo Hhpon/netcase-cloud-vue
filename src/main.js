@@ -1,10 +1,14 @@
+import 'babel-polyfill'
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './vuex/store'
-import './icon/iconfont.css'
-import '../public/reset.css'
+import './common/icon/iconfont.css'
+import './common/scss/index.scss'
 import './registerServiceWorker'
+import fastclick from 'fastclick'
+
+fastclick.attach(document.body) // 解决移动端点击300ms延迟
 
 Vue.config.productionTip = false
 
