@@ -1,8 +1,23 @@
 <template>
   <div id="app">
-    <router-view/>
+    <m-header></m-header>
+    <tabber></tabber>
+    <router-view></router-view>
   </div>
 </template>
+
+
+<script>
+import MHeader from "components/m-header/m-header";
+import Tabber from 'components/tabber/tabber'
+
+export default {
+  components: {
+    MHeader,
+    Tabber
+  }
+};
+</script>
 
 <style lang="scss">
 #app {

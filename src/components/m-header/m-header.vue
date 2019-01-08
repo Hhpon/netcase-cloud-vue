@@ -13,7 +13,7 @@
 .header {
   letter-spacing: 4px;
   height: 44px;
-  background-color: #d44439;
+  background-color: $color-background;
   display: flex;
   align-items: center;
   justify-content: space-between;

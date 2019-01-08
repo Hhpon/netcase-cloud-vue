@@ -11,17 +11,14 @@
         <span>歌手</span>
       </router-link>
     </div>
-    <router-view></router-view>
   </div>
 </template>
 <style lang="scss" scoped>
-* {
-  padding: 0;
-  margin: 0;
-}
+@import "common/scss/variable.scss";
+
 .tabber {
   height: 44px;
-  background-color: #d44439;
+  background-color: $color-background;
   display: flex;
   align-items: center;
   justify-content: space-around;
