@@ -26,7 +26,7 @@
   </div>
 </template>
 <script>
-import Scroll from "../Scroll/Scroll.vue";
+import Scroll from "components/Scroll/Scroll.vue";
 import axios from "axios";
 export default {
   components: {

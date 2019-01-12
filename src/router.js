@@ -7,27 +7,36 @@ import Singer from './components/Singer/Singer.vue'
 Vue.use(Router)
 
 export default new Router({
-  routes: [{
-    path: '/',
-    redirect: '/recommend',
-    children: [
-      {
-        
-        path: 'recommend',
-        name: 'Recommend',
-        component: Recommend
-      },
-      {
-        path: 'rank',
-        name: 'Ranking',
-        component: Ranking
-      },
-      {
-        path: 'singer',
-        name: 'Singer',
-        component: Singer
-      }
-    ]
-  },
+  routes: [
+    // {
+    //   path: '/',
+    //   redirect: '/recommend',
+    //   children: [
+    //     {
+
+    //       path: 'recommend',
+    //       name: 'Recommend',
+    //       component: Recommend
+    //     },
+    //     {
+    //       path: 'rank',
+    //       name: 'Ranking',
+    //       component: Ranking
+    //     },
+    //     {
+    //       path: 'singer',
+    //       name: 'Singer',
+    //       component: Singer
+    //     }
+    //   ]
+    // },
+    {
+      path: '/',
+      redirect: '/recommend'
+    },
+    {
+      path: '/recommend',
+      component: Recommend
+    }
   ]
 })

@@ -11,6 +11,7 @@
     "axios": "^0.18.0",
     "babel-runtime": "^6.26.0",
     "fastclick": "^1.0.6",
+    "jsonp": "^0.2.1",
     "pinyin": "^2.8.3",
     "register-service-worker": "^1.5.2",
     "vue": "^2.5.17",

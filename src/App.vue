@@ -6,9 +6,8 @@
   </div>
 </template>
 
-
 <script>
-import MHeader from "components/m-header/m-header";
+import MHeader from "components/m-header/m-header"
 import Tabber from 'components/tabber/tabber'
 
 export default {
