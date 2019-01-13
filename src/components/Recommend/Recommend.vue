@@ -2,7 +2,7 @@
   <div>
     <div class="scroll-container">
       <div class="scroll-item"></div>
-      <Scroll class="scroll-self"></Scroll>
+      <slider class="scroll-self"></slider>
     </div>
     <div class="recommend-list-header">推荐歌单</div>
     <ul class="songlist-ul">
@@ -26,16 +26,16 @@
   </div>
 </template>
 <script>
-import Scroll from "components/Scroll/Scroll.vue";
+import Slider from "components/slider/slider.vue";
 import axios from "axios";
 export default {
   components: {
-    Scroll
+    Slider
   },
   data() {
     return {
       songLists: [],
-      newSongs: [] 
+      newSongs: []
     };
   },
   mounted() {
@@ -50,7 +50,7 @@ export default {
     },
     getNewSong() {
       axios.get("http://localhost:3000/personalized/newsong").then(res => {
-        for(let i = 0; i < 9; i++){
+        for (let i = 0; i < 9; i++) {
           this.newSongs.push(res.data.result[i]);
         }
       });
@@ -109,11 +109,11 @@ export default {
       font-size: 13px;
       padding: 5px 0px 10px;
     }
-    .newsong-info{
+    .newsong-info {
       font-size: 13px;
       padding: 5px 0px;
     }
-    .song-author{
+    .song-author {
       font-size: 12px;
       padding-bottom: 10px;
     }
