@@ -2,13 +2,15 @@
   <div id="app">
     <m-header></m-header>
     <tabber></tabber>
-    <router-view></router-view>
+    <keep-alive>  <!-- 使 router-view 的内容缓存到内存中 减轻服务器压力-->
+      <router-view></router-view>
+    </keep-alive>
   </div>
 </template>
 
 <script>
-import MHeader from "components/m-header/m-header"
-import Tabber from 'components/tabber/tabber'
+import MHeader from "components/m-header/m-header";
+import Tabber from "components/tabber/tabber";
 
 export default {
   components: {

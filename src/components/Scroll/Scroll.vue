@@ -76,9 +76,13 @@ export default {
       clearInterval(this.timer);
       this.timer = null;
     },
-    change(index){
+    change(index) {
       this.mark = index;
     }
+  },
+  destroyed() { // 如果页面内有定时器，需要在组件销毁的时候清除定时器，以释放内存，这是一个比较好的编程习惯
+    console.log("组件销毁了")
+    clearTimeout(this.timer)
   }
 };
 // 由于无法获取到图片的高度，放弃这个方法
