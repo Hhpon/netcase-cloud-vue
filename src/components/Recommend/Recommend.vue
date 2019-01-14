@@ -2,7 +2,7 @@
   <div>
     <div class="scroll-container">
       <div class="scroll-item"></div>
-      <slider class="scroll-self"></slider>
+      <!-- <slider class="scroll-self"></slider> -->
     </div>
     <div class="recommend-list-header">推荐歌单</div>
     <ul class="songlist-ul">
@@ -26,12 +26,10 @@
   </div>
 </template>
 <script>
-import Slider from "components/slider/slider.vue";
 import axios from "axios";
+
 export default {
-  components: {
-    Slider
-  },
+  components: {},
   data() {
     return {
       songLists: [],
