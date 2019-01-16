@@ -1,33 +1,37 @@
 <template>
   <div>
-    <div class="scroll-container">
-      <div class="scroll-item"></div>
-      <slider class="scroll-self"></slider>
-    </div>
-    <div class="recommend-list-header">推荐歌单</div>
-    <ul class="songlist-ul">
-      <li v-for="(songlist,index) in songLists" :key="index" class="songList-item">
-        <img :src="songlist.picUrl">
-        <div class="song-info">{{songlist.name}}</div>
-        <div class="playCount-container">
-          <i class="iconfont icon-cloud-headset" style="font-size: 12px;"></i>
-          {{playCountNum(songlist)}}
-        </div>
-      </li>
-    </ul>
-    <div class="recommend-list-header">推荐歌曲</div>
-    <ul class="songlist-ul">
-      <li v-for="(songlist,index) in newSongs" :key="index" class="songList-item">
-        <img :src="songlist.song.album.blurPicUrl">
-        <div class="newsong-info">{{songlist.name}}</div>
-        <div class="song-author">{{songlist.song.artists[0].name}}</div>
-      </li>
-    </ul>
+    <cube-scroll refs="scroll" :data="songLists">
+      <div class="scroll-container">
+        <div class="scroll-item"></div>
+        <slider class="scroll-self"></slider>
+      </div>
+      <div class="recommend-list-header">推荐歌单</div>
+      <ul class="songlist-ul">
+        <li v-for="(songlist,index) in songLists" :key="index" class="songList-item">
+          <img v-lazy="songlist.picUrl">
+          <div class="song-info">{{songlist.name}}</div>
+          <div class="playCount-container">
+            <i class="iconfont icon-cloud-headset" style="font-size: 12px;"></i>
+            {{playCountNum(songlist)}}
+          </div>
+        </li>
+      </ul>
+      <cube-loading :size="40" class="loading_container" v-show="!songLists.length"></cube-loading>
+      <div class="recommend-list-header">推荐歌曲</div>
+      <ul class="songlist-ul">
+        <li v-for="(songlist,index) in newSongs" :key="index" class="songList-item">
+          <img v-lazy="songlist.song.album.blurPicUrl">
+          <div class="newsong-info">{{songlist.name}}</div>
+          <div class="song-author">{{songlist.song.artists[0].name}}</div>
+        </li>
+      </ul>
+      <cube-loading :size="40" class="loading_container" v-show="!newSongs.length"></cube-loading>
+    </cube-scroll>
   </div>
 </template>
 <script>
 import axios from "axios";
-import Slider from 'components/slider/slider'
+import Slider from "components/slider/slider";
 
 export default {
   components: {
@@ -40,8 +44,10 @@ export default {
     };
   },
   mounted() {
-    this.getSonglist();
-    this.getNewSong();
+    setTimeout(() => {
+      this.getSonglist();
+      this.getNewSong();
+    }, 1000);
   },
   methods: {
     getSonglist() {
@@ -126,5 +132,9 @@ export default {
       color: #fff;
     }
   }
+}
+.loading_container {
+  display: flex;
+  justify-content: center;
 }
 </style>

@@ -8,8 +8,13 @@ import './common/icon/iconfont.css'
 import './common/scss/index.scss'
 import './registerServiceWorker'
 import fastclick from 'fastclick'
+import VueLazyLoad from 'vue-lazyload'
 
 fastclick.attach(document.body) // 解决移动端点击300ms延迟
+
+Vue.use(VueLazyLoad,{
+  loading: require('common/imgs/loading.png')
+})
 
 Vue.config.productionTip = false
 
