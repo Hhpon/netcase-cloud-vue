@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { getBannerList } from "common/api/recommend.js";
+import { getBannerList } from "api/recommend.js";
 
 export default {
   data() {

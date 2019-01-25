@@ -11,7 +11,8 @@ module.exports = {
       alias: {
         'components': '@/components',
         'views': '@/views',
-        'common': '@/common'
+        'common': '@/common',
+        'api': '@/api'
       }
     }
   },
