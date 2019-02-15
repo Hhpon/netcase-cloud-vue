@@ -1,5 +1,6 @@
 import axios from 'axios';
 import pinyin from "pinyin";
+
 export default {
     state: {
         singerList: []
