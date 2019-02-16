@@ -13,10 +13,16 @@
         </li>
       </ul>
     </cube-scroll>-->
-    <cube-index-list :data="data">
-      <cube-index-list-group v-for="group in data" :key="group.title">
-        <cube-index-list-item v-for="(item,index) in group" :key="index">
-          <div>{{index}}</div>
+    <cube-index-list :data="data" class="singers-content">
+      <cube-index-list-group v-for="(group,index) in data" :key="index" :group='group' class="list-group">
+        <cube-index-list-item
+          v-for="(item,index) in group.items"
+          :key="index"
+          :item='item'
+          class="list-group-item"
+        >
+          <img v-lazy="item.img1v1Url" class="avator">
+          <div class="name">{{item.name}}</div>
         </cube-index-list-item>
       </cube-index-list-group>
     </cube-index-list>
@@ -49,17 +55,7 @@ export default {
   width: 100%;
   .singers-content {
     height: 100%;
-  }
-  .list-group {
-    .list-group-title {
-      padding-left: 10px;
-      line-height: 20px;
-      font-size: 12px;
-      background-color: #d9dadb;
-      color: #fff;
-    }
-    .list-group-block {
-      padding: 10px 0;
+    .list-group {
       .list-group-item {
         display: flex;
         align-items: center;
