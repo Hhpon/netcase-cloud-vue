@@ -1,10 +1,8 @@
 <template>
-  <div>
-    <div class="header">
-      <img class="header-imgs" src="@/common/imgs/category.svg" alt>
-      <div class="header-text">VMUSIC</div>
-      <img class="header-imgs" src="@/common/imgs/search.svg" alt>
-    </div>
+  <div class="header">
+    <img class="header-imgs" src="@/common/imgs/category.svg" alt>
+    <div class="header-text">VMUSIC</div>
+    <img class="header-imgs" src="@/common/imgs/search.svg" alt>
   </div>
 </template>
 <style lang="scss" scoped>

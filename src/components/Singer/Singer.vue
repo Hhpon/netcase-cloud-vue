@@ -36,7 +36,7 @@ export default {
     _normalizeSinger(list) {
       let map = {
         hot: {
-          title: HOT_NAME,
+          name: HOT_NAME,
           items: []
         }
       };
@@ -46,14 +46,14 @@ export default {
             new Singer({
               id: element.id,
               name: element.name,
-              picUrl: element.picUrl
+              img1v1Url: element.img1v1Url
             })
           );
         }
         let key = element.py;
         if (!map[key]) {
           map[key] = {
-            title: key,
+            name: key,
             items: []
           };
         }
@@ -61,7 +61,7 @@ export default {
           new Singer({
             id: element.id,
             name: element.name,
-            picUrl: element.picUrl
+            img1v1Url: element.img1v1Url
           })
         );
       });

@@ -1,19 +1,17 @@
 <template>
-  <div>
-    <cube-slide ref="slide" :data="bannerList" class="slider">
-      <cube-slide-item v-for="(banner,index) in bannerList" :key="index" class="slider-group">
-        <img :src="banner.imageUrl" class="slider-item">
-      </cube-slide-item>
-      <template slot="dots" slot-scope="props">
-        <span
-          class="slide-dot"
-          :class="{active: props.current === index}"
-          v-for="(item, index) in props.dots"
-          :key="index"
-        >{{index + 1}}</span>
-      </template>
-    </cube-slide>
-  </div>
+  <cube-slide ref="slide" :data="bannerList" class="slider">
+    <cube-slide-item v-for="(banner,index) in bannerList" :key="index" class="slider-group">
+      <img :src="banner.imageUrl" class="slider-item">
+    </cube-slide-item>
+    <template slot="dots" slot-scope="props">
+      <span
+        class="slide-dot"
+        :class="{active: props.current === index}"
+        v-for="(item, index) in props.dots"
+        :key="index"
+      >{{index + 1}}</span>
+    </template>
+  </cube-slide>
 </template>
 
 <script>

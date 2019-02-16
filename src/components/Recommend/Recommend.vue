@@ -1,10 +1,9 @@
 <template>
-  <div>
-    <cube-scroll refs="scroll" :data="songLists">
-      <div class="scroll-container">
-        <div class="scroll-item"></div>
-        <slider class="scroll-self"></slider>
-      </div>
+  <div class="recommend" ref="recommend">
+    <cube-scroll refs="scroll" :data="songLists" class="recommend-content">
+      <!-- <div class="slider-container"> -->
+      <div class="slider-item"></div>
+      <slider class="slider-self"></slider>
       <div class="recommend-list-header">推荐歌单</div>
       <ul class="songlist-ul">
         <li v-for="(songlist,index) in songLists" :key="index" class="songList-item">
@@ -79,62 +78,72 @@ export default {
 
 
 <style lang="scss" scoped>
-.scroll-container {
-  position: relative;
-  .scroll-item {
-    width: 100%;
-    height: 90px;
-    position: absolute;
-    background-color: #d44439;
-  }
-  .scroll-self {
-    width: 96%;
-    margin: 0 auto;
-  }
-}
-.recommend-list-header {
-  height: 65px;
-  font-size: 14px;
-  font-weight: 700;
-  color: #2e3030;
-  line-height: 65px;
-  padding-left: 1.5%;
-}
-.songlist-ul {
-  display: flex;
+@import "common/scss/variable.scss";
+
+.recommend {
+  position: fixed;
+  top: 88px;
+  bottom: 0;
   width: 100%;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  li {
-    width: 31%;
-    position: relative;
-    img {
+  .recommend-content {
+    height: 100%;
+    .slider-item {
       width: 100%;
-      border-radius: 5px;
-    }
-    .song-info {
-      font-size: 13px;
-      padding: 5px 0px 10px;
-    }
-    .newsong-info {
-      font-size: 13px;
-      padding: 5px 0px;
-    }
-    .song-author {
-      font-size: 12px;
-      padding-bottom: 10px;
-    }
-    .playCount-container {
-      font-size: 12px;
+      height: 40vh;
       position: absolute;
-      top: 2px;
-      right: 2px;
-      color: #fff;
+      top: -30vh;
+      background-color: $color-background;
+    }
+    .slider-self {
+      width: 96%;
+      margin: 0 auto;
+    }
+
+    .recommend-list-header {
+      height: 65px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #2e3030;
+      line-height: 65px;
+      padding-left: 1.5%;
+    }
+    .songlist-ul {
+      display: flex;
+      width: 100%;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      li {
+        width: 31%;
+        position: relative;
+        img {
+          width: 100%;
+          border-radius: 5px;
+        }
+        .song-info {
+          font-size: 13px;
+          padding: 5px 0px 10px;
+        }
+        .newsong-info {
+          font-size: 13px;
+          padding: 5px 0px;
+        }
+        .song-author {
+          font-size: 12px;
+          padding-bottom: 10px;
+        }
+        .playCount-container {
+          font-size: 12px;
+          position: absolute;
+          top: 2px;
+          right: 2px;
+          color: #fff;
+        }
+      }
+    }
+    .loading_container {
+      display: flex;
+      justify-content: center;
     }
   }
-}
-.loading_container {
-  display: flex;
-  justify-content: center;
 }
 </style>

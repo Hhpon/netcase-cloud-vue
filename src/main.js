@@ -13,7 +13,7 @@ import VueLazyLoad from 'vue-lazyload'
 fastclick.attach(document.body) // 解决移动端点击300ms延迟
 
 Vue.use(VueLazyLoad,{
-  loading: require('common/imgs/loading.png')
+  loading: require('common/imgs/default.png')
 })
 
 Vue.config.productionTip = false

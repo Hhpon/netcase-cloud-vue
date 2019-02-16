@@ -1,7 +1,7 @@
 export default class Singer {
-    constructor({ id, name, picUrl }) {
+    constructor({ id, name, img1v1Url }) {
         this.id = id
         this.name = name
-        this.picUrl = picUrl
+        this.img1v1Url = img1v1Url
     }
 }
