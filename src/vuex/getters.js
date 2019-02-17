@@ -1,0 +1,1 @@
+export const singer = state => state.singer   // 箭头函数简写
