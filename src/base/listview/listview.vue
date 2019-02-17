@@ -14,12 +14,18 @@
       </ul>
     </cube-scroll>-->
     <cube-index-list :data="data" class="singers-content">
-      <cube-index-list-group v-for="(group,index) in data" :key="index" :group='group' class="list-group">
+      <cube-index-list-group
+        v-for="(group,index) in data"
+        :key="index"
+        :group="group"
+        class="list-group"
+      >
         <cube-index-list-item
           v-for="(item,index) in group.items"
           :key="index"
-          :item='item'
+          :item="item"
           class="list-group-item"
+          @select="selectItem"
         >
           <img v-lazy="item.img1v1Url" class="avator">
           <div class="name">{{item.name}}</div>
@@ -37,10 +43,10 @@ export default {
       default: null
     }
   },
-  mounted() {
-    setTimeout(() => {
-      console.log(this.data);
-    }, 3000);
+  methods: {
+    selectItem(item) {
+      this.$emit("select", item);
+    }
   }
 };
 </script>
