@@ -1,9 +1,10 @@
 import axios from 'axios'
 import pinyin from 'pinyin'
+import { HOST } from 'common/js/config'
 
 export function getSinger() {
     return axios
-        .get("http://localhost:3000/top/artists?offset=0&limit=100")
+        .get(`${HOST}/top/artists?offset=0&limit=100`)
         .then(res => {
             let result = res.data.artists
             result.forEach(element => {
@@ -13,4 +14,12 @@ export function getSinger() {
             });
             return result
         });
+}
+
+export function getSingerDetail(id) {
+    return axios.get(`${HOST}/artists?id=${id}`).then((result) => {
+        return result.data;
+    }).catch((err) => {
+        return (`getSingerDetail的错误是${err}`)
+    });
 }
