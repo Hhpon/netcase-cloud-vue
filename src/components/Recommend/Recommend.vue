@@ -10,7 +10,9 @@
           <img v-lazy="songlist.picUrl">
           <div class="song-info">{{songlist.name}}</div>
           <div class="playCount-container">
-            <i class="iconfont icon-cloud-headset" style="font-size: 12px;"></i>
+            <svg class="icon" aria-hidden="true">
+              <use xlink:href="#icon-cloud-headset" style="font-size: 12px;"></use>
+            </svg>
             {{playCountNum(songlist)}}
           </div>
         </li>
