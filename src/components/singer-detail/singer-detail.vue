@@ -1,6 +1,6 @@
 <template>
   <transition name="slide">
-    <div class="singer-detail"></div>
+    <music-list :songs="songs" :bg-image="bgImage" :title="title" headerTitle="歌手"></music-list>
   </transition>
 </template>
 
@@ -9,6 +9,7 @@ import { mapGetters } from "vuex";
 import { getSingerDetail } from "api/singer";
 import { ERR_OK } from "common/js/config";
 import { createSong } from "common/js/song";
+import MusicList from "components/music-list/music-list";
 
 export default {
   data() {
@@ -16,7 +17,16 @@ export default {
       songs: []
     };
   },
+  components: {
+    MusicList
+  },
   computed: {
+    title() {
+      return this.singer.name;
+    },
+    bgImage() {
+      return this.singer.img1v1Url;
+    },
     ...mapGetters(["singer"])
   },
   created() {
@@ -28,10 +38,10 @@ export default {
         this.$router.push("/singer");
         return;
       }
+      console.log(this.singer);
       getSingerDetail(this.singer.id).then(res => {
         if (res.code === ERR_OK) {
           this.songs = this._normalizeSongs(res.hotSongs);
-          console.log(this.songs);
         }
       });
     },
@@ -39,7 +49,6 @@ export default {
       let ret = [];
       list.forEach(item => {
         let musicData = item;
-        console.log(musicData);
         if (musicData.privilege.id && musicData.al.id) {
           ret.push(createSong(musicData));
         }
@@ -52,15 +61,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "common/scss/variable.scss";
-.singer-detail {
-  position: fixed;
-  z-index: 100;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background-color: #fff;
-}
+
 .slide-enter-active,
 .slide-leave-active {
   transition: all 0.3s;
