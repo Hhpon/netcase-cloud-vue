@@ -1,6 +1,6 @@
 <template>
   <transition name="slide">
-    <music-list :songs="songs" :bg-image="bgImage" :title="title" headerTitle="歌手"></music-list>
+    <music-list :songs="songs" :bg-image="bgImage" :title="title"></music-list>
   </transition>
 </template>
 
@@ -38,7 +38,6 @@ export default {
         this.$router.push("/singer");
         return;
       }
-      console.log(this.singer);
       getSingerDetail(this.singer.id).then(res => {
         if (res.code === ERR_OK) {
           this.songs = this._normalizeSongs(res.hotSongs);
