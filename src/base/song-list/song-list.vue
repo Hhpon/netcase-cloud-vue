@@ -10,7 +10,7 @@
       </div>
     </div>
     <ul>
-      <li v-for="(song, index) in songs" :key="index" class="item">
+      <li @click="selectItem(song,index)" v-for="(song, index) in songs" :key="index" class="item">
         <div class="num">{{index+1}}</div>
         <div class="content">
           <h2 class="name">{{getSongName(song)}}</h2>
@@ -34,6 +34,10 @@ export default {
     }, 1000);
   },
   methods: {
+    selectItem(item, index) {
+      // 本组件为基础组件，所以不去写任何逻辑，只派发这个事件，只告诉外面的父组件，这个东西被电击了，以及点击的是什么东西
+      this.$emit("select", item, index);
+    },
     getSongName(song) {
       if (song.alia) {
         return `${song.songName}(${song.alia})`;

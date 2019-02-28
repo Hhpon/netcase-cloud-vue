@@ -18,7 +18,7 @@
         :options="options"
         :data="songs"
       >
-        <song-list :songs="songs"></song-list>
+        <song-list @select="selectItem" :songs="songs"></song-list>
       </cube-scroll>
     </div>
   </div>
@@ -27,6 +27,7 @@
 <script>
 import songList from "base/song-list/song-list";
 import { prefixStyle } from "common/js/dom";
+import { mapActions } from "vuex";
 
 const RESERVED_HEIGHT = 40;
 const transform = prefixStyle("transform");
@@ -70,12 +71,19 @@ export default {
     this.$refs.lists.style.top = `${this.imageHeight - 10}px`;
   },
   methods: {
+    selectItem(item, index) {
+      // 子组件只是把应该返回的数据返回回来，而不是看父组件使用什么 
+      this.selectPlay({
+        list: this.songs,
+      });
+    },
     back() {
       this.$router.back();
     },
     scroll(pos) {
       this.scrollY = pos.y;
-    }
+    },
+    ...mapActions(['selectPlay'])
   },
   watch: {
     scrollY(newY) {
