@@ -18,7 +18,6 @@ export function getSinger() {
 
 export function getSingerDetail(id) {
     return axios.get(`${HOST}/artists?id=${id}`).then((result) => {
-        console.log(result.data);
         return result.data;
     }).catch((err) => {
         return (`getSingerDetail的错误是${err}`)

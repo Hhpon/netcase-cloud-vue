@@ -66,15 +66,16 @@ export default {
     this.scrollEvents = ["scroll"];
   },
   mounted() {
-    this.imageHeight = this.$refs.bgImage.clientHeight;
+    this.imageHeight = this.$refs.bgImage.clientHeight - 10;
     this.minTranslateY = -this.imageHeight + RESERVED_HEIGHT;
-    this.$refs.lists.style.top = `${this.imageHeight - 10}px`;
+    this.$refs.lists.style.top = `${this.imageHeight}px`;
   },
   methods: {
     selectItem(item, index) {
-      // 子组件只是把应该返回的数据返回回来，而不是看父组件使用什么 
+      // 子组件只是把应该返回的数据返回回来，而不是看父组件使用什么
       this.selectPlay({
         list: this.songs,
+        index
       });
     },
     back() {
@@ -83,7 +84,7 @@ export default {
     scroll(pos) {
       this.scrollY = pos.y;
     },
-    ...mapActions(['selectPlay'])
+    ...mapActions(["selectPlay"])
   },
   watch: {
     scrollY(newY) {
