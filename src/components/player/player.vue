@@ -23,7 +23,7 @@
         <div class="middle">
           <div class="middle-l">
             <div class="cd-wrapper" ref="cdWrapper">
-              <div class="cd">
+              <div class="cd" :class="cdCls">
                 <img :src="currentSong.alPicUrl" class="image">
               </div>
             </div>
@@ -36,18 +36,18 @@
                 <use xlink:href="#icon-danquxunhuan1"></use>
               </svg>
             </div>
-            <div class="i-left icon-container">
-              <svg class="icon" aria-hidden="true">
+            <div class="i-left icon-container" :class="disableCls">
+              <svg @click="prev" class="icon" aria-hidden="true">
                 <use xlink:href="#icon-preMusic"></use>
               </svg>
             </div>
-            <div class="i-center icon-container">
-              <svg class="icon" aria-hidden="true">
-                <use xlink:href="#icon-play"></use>
+            <div class="i-center icon-container" :class="disableCls">
+              <svg @click="togglePlaying" class="icon" aria-hidden="true">
+                <use v-bind:xlink:href="playIcon"></use>
               </svg>
             </div>
-            <div class="i-right icon-container">
-              <svg class="icon" aria-hidden="true">
+            <div class="i-right icon-container" :class="disableCls">
+              <svg @click="next" class="icon" aria-hidden="true">
                 <use xlink:href="#icon-xiayiqu101"></use>
               </svg>
             </div>
@@ -63,15 +63,15 @@
     <transition name="mini">
       <div class="mini-player" v-show="!fullScreen" @click="open">
         <div class="rotate-img">
-          <img :src="currentSong.alPicUrl" width="40" height="40">
+          <img :class="cdCls" :src="currentSong.alPicUrl" width="40" height="40">
         </div>
         <div class="text">
           <h2 class="name" v-html="currentSong.songName"></h2>
           <p class="desc" v-html="currentSong.singer"></p>
         </div>
         <div class="control">
-          <svg class="icon" aria-hidden="true">
-            <use xlink:href="#icon-play"></use>
+          <svg @click.stop="togglePlaying" class="icon" aria-hidden="true">
+            <use v-bind:xlink:href="playIcon"></use>
           </svg>
         </div>
         <div class="control">
@@ -81,21 +81,42 @@
         </div>
       </div>
     </transition>
+    <audio ref="audio" :src="songUrl" @canplay="ready" @error="error"></audio>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapMutations } from "vuex";
 import animations from "create-keyframe-animation";
+import { prefixStyle } from "common/js/dom";
+import { getSongUrl } from "api/song";
+
+const transform = prefixStyle("transform");
 
 export default {
   data() {
     return {
-      isShow: true
+      songUrl: "",
+      songReady: false
     };
   },
   computed: {
-    ...mapGetters(["fullScreen", "playlist", "currentSong"])
+    cdCls() {
+      return this.playing ? "play" : "play pause";
+    },
+    playIcon() {
+      return this.playing ? "#icon-bofang" : "#icon-zanting";
+    },
+    disableCls() {
+      return this.songReady ? "" : "disable";
+    },
+    ...mapGetters([
+      "fullScreen",
+      "playlist",
+      "currentSong",
+      "playing",
+      "currentIndex"
+    ])
   },
   methods: {
     back() {
@@ -104,20 +125,56 @@ export default {
     open() {
       this.setFullScreen(true);
     },
+    togglePlaying() {
+      if (!this.songReady) {
+        return;
+      }
+      this.setPlayingState(!this.playing);
+    },
+    next() {
+      if (!this.songReady) {
+        return;
+      }
+      let index = this.currentIndex + 1;
+      if (index === this.playlist.length) {
+        index = 0;
+      }
+      this.setCurrentIndex(index);
+      if (!this.playing) {
+        this.togglePlaying();
+      }
+      this.songReady = false;
+    },
+    prev() {
+      if (!this.songReady) {
+        return;
+      }
+      let index = this.currentIndex - 1;
+      if (index === -1) {
+        index = this.playlist.length;
+      }
+      this.setCurrentIndex(index);
+      this.songReady = false;
+    },
+    ready() {
+      this.songReady = true;
+    },
+    error() {
+      // 当我们点击上一曲下一曲的时候，如果进入到的歌曲由于某些原因加载失败，ready函数永远不会执行，按钮就会失效。所以为了保证这种情况发生时可以继续使用，定义了这个方法
+      this.songReady = true;
+    },
     enter(el, done) {
       const { x, y, scale } = this._getPosAndScale();
 
-      console.log(x, y, scale);
-
       let animation = {
         0: {
-          transition: `translate3d(${x}px,${y}px,0) scale(${scale})`
+          transform: `translate3d(${x}px,${y}px,0) scale(${scale})`
         },
         60: {
-          transition: `translate3d(0,0,0) scale(1.1)`
+          transform: `translate3d(0,0,0) scale(1.1)`
         },
         100: {
-          transition: `translate3d(0,0,0) scale(1)`
+          transform: `translate3d(0,0,0) scale(1)`
         }
       };
 
@@ -130,16 +187,24 @@ export default {
         }
       });
 
-      console.log(animations);
-
       animations.runAnimation(this.$refs.cdWrapper, "move", done);
     },
     afterEnter() {
       animations.unregisterAnimation("move");
       this.$refs.cdWrapper.style.animation = "";
     },
-    leave(el, done) {},
-    afterLeave() {},
+    leave(el, done) {
+      this.$refs.cdWrapper.style.transition = "all 0.4s";
+      const { x, y, scale } = this._getPosAndScale();
+      this.$refs.cdWrapper.style[
+        transform
+      ] = `translate3d(${x}px,${y}px,0) scale(${scale})`;
+      this.$refs.cdWrapper.addEventListener("transitionend", done);
+    },
+    afterLeave() {
+      this.$refs.cdWrapper.style.transition = "";
+      this.$refs.cdWrapper.style[transform] = "";
+    },
     _getPosAndScale() {
       const targetWidth = 40;
       const paddingLeft = 40;
@@ -156,8 +221,26 @@ export default {
       };
     },
     ...mapMutations({
-      setFullScreen: "SET_FULL_SCREEN"
+      setFullScreen: "SET_FULL_SCREEN",
+      setPlayingState: "SET_PLAYING_STATE",
+      setCurrentIndex: "SET_CURRENT_INDEX"
     })
+  },
+  watch: {
+    currentSong() {
+      getSongUrl(this.currentSong.songId).then(res => {
+        this.songUrl = res;
+        this.$nextTick(() => {
+          this.$refs.audio.play();
+        });
+      });
+    },
+    playing(newPlaying) {
+      const audio = this.$refs.audio;
+      this.$nextTick(() => {
+        newPlaying ? audio.play() : audio.pause();
+      });
+    }
   }
 };
 </script>
@@ -207,9 +290,12 @@ export default {
         color: $color-text;
       }
       .subtitle {
+        width: 70%;
+        margin: 0 auto;
         line-height: 20px;
         text-align: center;
-        font-size: $font-size-medium;
+        @include no-row();
+        font-size: $font-size-small;
         color: $color-text;
       }
     }
@@ -235,9 +321,13 @@ export default {
           .cd {
             width: 100%;
             height: 100%;
-            box-sizing: border-box;
-            border: 10px solid rgba($color: #fff, $alpha: 0.1);
             border-radius: 50%;
+            &.play {
+              animation: rotate 20s linear infinite;
+            }
+            &.pause {
+              animation-play-state: paused;
+            }
             .image {
               position: absolute;
               left: 0;
@@ -245,6 +335,8 @@ export default {
               width: 100%;
               height: 100%;
               border-radius: 50%;
+              box-sizing: border-box;
+              border: 10px solid rgba($color: #fff, $alpha: 0.1);
             }
           }
         }
@@ -261,6 +353,9 @@ export default {
           font-size: 30px;
           color: $color-icon;
           flex: 1;
+          &.disable {
+            color: $color-theme-d;
+          }
         }
         .i-left {
           text-align: right;
@@ -318,6 +413,12 @@ export default {
       padding: 0 10px 0 20px;
       img {
         border-radius: 50%;
+        &.play {
+          animation: rotate 20s linear infinite;
+        }
+        &.pause {
+          animation-play-state: paused;
+        }
       }
     }
     .text {
@@ -342,6 +443,14 @@ export default {
       width: 30px;
       padding: 0 10px;
       font-size: 30px;
+    }
+    @keyframes rotate {
+      0% {
+        transform: rotate(0);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
     }
   }
 }

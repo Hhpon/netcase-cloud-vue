@@ -1,3 +1,4 @@
+
 export default class Song {
     constructor({ singer, alId, alPicUrl, alName, alia, songName, songId }) {
         this.singer = singer
