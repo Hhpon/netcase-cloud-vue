@@ -30,6 +30,11 @@
           </div>
         </div>
         <div class="bottom">
+          <div class="progress-wrapper">
+            <span class="time time-l">{{format(currentTime)}}</span>
+            <div class="progress-bar-wrapper"></div>
+            <span class="time time-r"></span>
+          </div>
           <div class="operators">
             <div class="i-left icon-container">
               <svg class="icon" aria-hidden="true">
@@ -81,7 +86,7 @@
         </div>
       </div>
     </transition>
-    <audio ref="audio" :src="songUrl" @canplay="ready" @error="error"></audio>
+    <audio ref="audio" :src="songUrl" @canplay="ready" @error="error" @timeupdate="updateTime"></audio>
   </div>
 </template>
 
@@ -97,7 +102,8 @@ export default {
   data() {
     return {
       songUrl: "",
-      songReady: false
+      songReady: false,
+      currentTime: 0
     };
   },
   computed: {
@@ -162,6 +168,23 @@ export default {
     error() {
       // 当我们点击上一曲下一曲的时候，如果进入到的歌曲由于某些原因加载失败，ready函数永远不会执行，按钮就会失效。所以为了保证这种情况发生时可以继续使用，定义了这个方法
       this.songReady = true;
+    },
+    updateTime(e) {
+      this.currentTime = e.target.currentTime;
+    },
+    format(interval) {
+      interval = interval | 0;
+      const minute = (interval / 60) | 0;
+      const second = this._pad(interval % 60);
+      return `${minute}:${second}`;
+    },
+    _pad(num, n = 2) {
+      let len = num.toString().length;
+      while (len < n) {
+        num = "0" + num;
+        len++;
+      }
+      return num;
     },
     enter(el, done) {
       const { x, y, scale } = this._getPosAndScale();
