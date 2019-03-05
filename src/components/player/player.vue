@@ -32,8 +32,10 @@
         <div class="bottom">
           <div class="progress-wrapper">
             <span class="time time-l">{{format(currentTime)}}</span>
-            <div class="progress-bar-wrapper"></div>
-            <span class="time time-r"></span>
+            <div class="progress-bar-wrapper">
+              <progress-bar :percent="percent" @percentChange="onProgressBarChange"></progress-bar>
+            </div>
+            <span class="time time-r">{{format(duration)}}</span>
           </div>
           <div class="operators">
             <div class="i-left icon-container">
@@ -75,9 +77,11 @@
           <p class="desc" v-html="currentSong.singer"></p>
         </div>
         <div class="control">
-          <svg @click.stop="togglePlaying" class="icon" aria-hidden="true">
-            <use v-bind:xlink:href="playIcon"></use>
-          </svg>
+          <progress-circle :radius="radius" :percent="percent">
+            <svg @click.stop="togglePlaying" class="icon icon-mini" aria-hidden="true">
+              <use v-bind:xlink:href="playIcon"></use>
+            </svg>
+          </progress-circle>
         </div>
         <div class="control">
           <svg class="icon" aria-hidden="true">
@@ -89,12 +93,13 @@
     <audio ref="audio" :src="songUrl" @canplay="ready" @error="error" @timeupdate="updateTime"></audio>
   </div>
 </template>
-
 <script>
 import { mapGetters, mapMutations } from "vuex";
 import animations from "create-keyframe-animation";
 import { prefixStyle } from "common/js/dom";
 import { getSongUrl } from "api/song";
+import progressBar from "base/progress-bar/progress-bar";
+import progressCircle from "base/progress-circle/progress-circle";
 
 const transform = prefixStyle("transform");
 
@@ -103,7 +108,9 @@ export default {
     return {
       songUrl: "",
       songReady: false,
-      currentTime: 0
+      currentTime: 0,
+      duration: 0,
+      radius: 30
     };
   },
   computed: {
@@ -115,6 +122,9 @@ export default {
     },
     disableCls() {
       return this.songReady ? "" : "disable";
+    },
+    percent() {
+      return this.currentTime / this.duration;
     },
     ...mapGetters([
       "fullScreen",
@@ -164,6 +174,7 @@ export default {
     },
     ready() {
       this.songReady = true;
+      this.duration = this.$refs.audio.duration;
     },
     error() {
       // 当我们点击上一曲下一曲的时候，如果进入到的歌曲由于某些原因加载失败，ready函数永远不会执行，按钮就会失效。所以为了保证这种情况发生时可以继续使用，定义了这个方法
@@ -177,6 +188,12 @@ export default {
       const minute = (interval / 60) | 0;
       const second = this._pad(interval % 60);
       return `${minute}:${second}`;
+    },
+    onProgressBarChange(percent) {
+      this.$refs.audio.currentTime = this.duration * percent;
+      if (!this.playing) {
+        this.togglePlaying();
+      }
     },
     _pad(num, n = 2) {
       let len = num.toString().length;
@@ -264,6 +281,10 @@ export default {
         newPlaying ? audio.play() : audio.pause();
       });
     }
+  },
+  components: {
+    progressBar,
+    progressCircle
   }
 };
 </script>
@@ -369,6 +390,29 @@ export default {
       position: absolute;
       bottom: 50px;
       width: 100%;
+      .progress-wrapper {
+        display: flex;
+        align-items: center;
+        width: 80%;
+        margin: 0 auto;
+        padding: 10px 0;
+        .time {
+          color: $color-text;
+          font-size: $font-size-small;
+          flex: 0 0 30px;
+          line-height: 30px;
+          width: 30px;
+          &.time-l {
+            text-align: left;
+          }
+          &.time-r {
+            text-align: right;
+          }
+        }
+        .progress-bar-wrapper {
+          flex: 1;
+        }
+      }
       .operators {
         display: flex;
         align-items: center;
@@ -466,6 +510,12 @@ export default {
       width: 30px;
       padding: 0 10px;
       font-size: 30px;
+      .icon-mini {
+        z-index: -1;
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
     }
     @keyframes rotate {
       0% {
