@@ -1,3 +1,5 @@
+import { getLyric } from 'api/song'
+import { ERR_OK } from 'common/js/config'
 
 export default class Song {
     constructor({ singer, alId, alPicUrl, alName, alia, songName, songId }) {
@@ -8,6 +10,23 @@ export default class Song {
         this.alia = alia
         this.songName = songName
         this.songId = songId
+    }
+
+    getLyric() {
+        if (this.lyric) {
+            return Promise.resolve(this.lyric)
+        }
+
+        return new Promise((resolve, reject) => {
+            getLyric(this.songId).then((res) => {
+                if (res.data.code === ERR_OK) {
+                    this.lyric = res.data.lrc.lyric
+                    resolve(this.lyric)
+                } else {
+                    reject('no lyric')
+                }
+            })
+        })
     }
 }
 

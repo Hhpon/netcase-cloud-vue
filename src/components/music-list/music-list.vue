@@ -18,7 +18,7 @@
         :options="options"
         :data="songs"
       >
-        <song-list @select="selectItem" :songs="songs"></song-list>
+        <song-list @select="selectItem" @random="random" :songs="songs"></song-list>
       </cube-scroll>
     </div>
   </div>
@@ -84,7 +84,10 @@ export default {
     scroll(pos) {
       this.scrollY = pos.y;
     },
-    ...mapActions(["selectPlay"])
+    random() {
+      this.randomPlay({list: this.songs})
+    },
+    ...mapActions(["selectPlay", "randomPlay"])
   },
   watch: {
     scrollY(newY) {

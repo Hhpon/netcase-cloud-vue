@@ -39,8 +39,8 @@
           </div>
           <div class="operators">
             <div class="i-left icon-container">
-              <svg class="icon" aria-hidden="true">
-                <use xlink:href="#icon-danquxunhuan1"></use>
+              <svg @click="changeMode" class="icon" aria-hidden="true">
+                <use v-bind:xlink:href="iconMode"></use>
               </svg>
             </div>
             <div class="i-left icon-container" :class="disableCls">
@@ -90,7 +90,14 @@
         </div>
       </div>
     </transition>
-    <audio ref="audio" :src="songUrl" @canplay="ready" @error="error" @timeupdate="updateTime"></audio>
+    <audio
+      ref="audio"
+      :src="songUrl"
+      @canplay="ready"
+      @error="error"
+      @timeupdate="updateTime"
+      @ended="end"
+    ></audio>
   </div>
 </template>
 <script>
@@ -100,6 +107,8 @@ import { prefixStyle } from "common/js/dom";
 import { getSongUrl } from "api/song";
 import progressBar from "base/progress-bar/progress-bar";
 import progressCircle from "base/progress-circle/progress-circle";
+import { playMode } from "common/js/config";
+import { shuffle } from "common/js/util";
 
 const transform = prefixStyle("transform");
 
@@ -126,12 +135,21 @@ export default {
     percent() {
       return this.currentTime / this.duration;
     },
+    iconMode() {
+      return this.mode === playMode.sequence
+        ? "#icon-danquxunhuan1"
+        : this.mode === playMode.loop
+        ? "#icon-danquxunhuan"
+        : "#icon-bofangye-caozuolan-suijibofang";
+    },
     ...mapGetters([
       "fullScreen",
       "playlist",
       "currentSong",
       "playing",
-      "currentIndex"
+      "currentIndex",
+      "mode",
+      "sequenceList"
     ])
   },
   methods: {
@@ -146,6 +164,17 @@ export default {
         return;
       }
       this.setPlayingState(!this.playing);
+    },
+    end() {
+      if (this.mode === playMode.loop) {
+        this.loop();
+      } else {
+        this.next();
+      }
+    },
+    loop() {
+      this.$refs.audio.currentTime = 0;
+      this.$refs.audio.play();
     },
     next() {
       if (!this.songReady) {
@@ -194,6 +223,24 @@ export default {
       if (!this.playing) {
         this.togglePlaying();
       }
+    },
+    changeMode() {
+      const mode = (this.mode + 1) % 3;
+      this.setPlayMode(mode);
+      let list = null;
+      if (mode === playMode.random) {
+        list = shuffle(this.sequenceList);
+      } else {
+        list = this.sequenceList;
+      }
+      this.resetCurrentIndex(list);
+      this.setPlayList(list);
+    },
+    resetCurrentIndex(list) {
+      let index = list.findIndex(item => {
+        return item.songId === this.currentSong.songId;
+      });
+      this.setCurrentIndex(index);
     },
     _pad(num, n = 2) {
       let len = num.toString().length;
@@ -263,15 +310,21 @@ export default {
     ...mapMutations({
       setFullScreen: "SET_FULL_SCREEN",
       setPlayingState: "SET_PLAYING_STATE",
-      setCurrentIndex: "SET_CURRENT_INDEX"
+      setCurrentIndex: "SET_CURRENT_INDEX",
+      setPlayMode: "SET_PLAY_MODE",
+      setPlayList: "SET_PLAYLIST"
     })
   },
   watch: {
-    currentSong() {
+    currentSong(newSong, oldSong) {
+      if (newSong.songId === oldSong.songId) {
+        return;
+      }
       getSongUrl(this.currentSong.songId).then(res => {
         this.songUrl = res;
         this.$nextTick(() => {
           this.$refs.audio.play();
+          this.currentSong.getLyric();
         });
       });
     },

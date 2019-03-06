@@ -8,3 +8,9 @@ export function getSongUrl(songId) {
     }
   })
 }
+
+export function getLyric(id) {
+  const url = HOST + `/lyric?id=${id}`
+
+  return axios.get(url)
+}

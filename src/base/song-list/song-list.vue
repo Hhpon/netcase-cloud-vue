@@ -1,8 +1,8 @@
 <template>
   <div class="song-list">
-    <div class="button">
+    <div class="button" @click="random">
       <svg class="icon icon-play" aria-hidden="true">
-        <use xlink:href="#icon-play"></use>
+        <use xlink:href="#icon-zanting"></use>
       </svg>
       <div class="button-desc">
         播放全部
@@ -38,6 +38,9 @@ export default {
         return `${song.songName}(${song.alia})`;
       }
       return song.songName;
+    },
+    random() {
+      this.$emit("random");
     }
   }
 };
