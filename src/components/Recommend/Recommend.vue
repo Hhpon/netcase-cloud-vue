@@ -1,6 +1,6 @@
 <template>
   <div class="recommend" ref="recommend">
-    <cube-scroll refs="scroll" :data="songLists" class="recommend-content">
+    <cube-scroll ref="scroll" :data="songLists" class="recommend-content">
       <!-- <div class="slider-container"> -->
       <div class="slider-item"></div>
       <slider class="slider-self"></slider>
@@ -33,8 +33,10 @@
 <script>
 import axios from "axios";
 import Slider from "components/slider/slider";
+import { playlistMixin } from "common/js/mixin";
 
 export default {
+  mixins: [playlistMixin],
   components: {
     Slider
   },
@@ -51,6 +53,11 @@ export default {
     }, 1000);
   },
   methods: {
+    handlePlaylist(playlist) {
+      const bottom = playlist.length > 0 ? "60px" : 0;
+      this.$refs.recommend.style.bottom = bottom;
+      this.$refs.scroll.refresh();
+    },
     getSonglist() {
       axios.get("http://localhost:3000/personalized").then(res => {
         this.songLists = res.data.result;

@@ -1,6 +1,6 @@
 <template>
-  <div class="rank">
-    <cube-scroll class="rank-content">
+  <div class="rank" ref="rank">
+    <cube-scroll class="rank-content" ref="scroll">
       <div class="topList-container" v-for="(topList,index) in topLists" :key="index">
         <div class="topList-left">
           <img v-lazy="topList.coverImgUrl" height="100px">
@@ -16,7 +16,10 @@
 </template>
 <script>
 import axios from "axios";
+import { playlistMixin } from "common/js/mixin";
+
 export default {
+  mixins: [playlistMixin],
   data() {
     return {
       topLists: []
@@ -26,6 +29,11 @@ export default {
     this.getTopList();
   },
   methods: {
+    handlePlaylist(playlist) {
+      const bottom = playlist.length > 0 ? "60px" : 0;
+      this.$refs.rank.style.bottom = bottom;
+      this.$refs.scroll.refresh();
+    },
     getTopList() {
       let topListArr = [17, 0, 1, 2, 3, 4, 15];
       for (let i = 0; i < topListArr.length; i++) {
@@ -45,7 +53,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import 'common/scss/variable.scss';
+@import "common/scss/variable.scss";
 
 .rank {
   position: fixed;

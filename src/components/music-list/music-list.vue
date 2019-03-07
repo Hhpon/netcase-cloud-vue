@@ -10,14 +10,8 @@
       <div class="filter" ref="filter"></div>
     </div>
     <div class="bg-layer" ref="layer"></div>
-    <div class="list" ref="lists">
-      <cube-scroll
-        class="cube-scroll"
-        @scroll="scroll"
-        :scroll-events="scrollEvents"
-        :options="options"
-        :data="songs"
-      >
+    <div class="list" ref="list">
+      <cube-scroll class="scroll-list" ref="scrollList" @scroll="scroll" :scroll-events="scrollEvents" :options="options" :data="songs">
         <song-list @select="selectItem" @random="random" :songs="songs"></song-list>
       </cube-scroll>
     </div>
@@ -28,12 +22,14 @@
 import songList from "base/song-list/song-list";
 import { prefixStyle } from "common/js/dom";
 import { mapActions } from "vuex";
+import { playlistMixin } from "common/js/mixin";
 
 const RESERVED_HEIGHT = 40;
 const transform = prefixStyle("transform");
 const backdrop = prefixStyle("backdrop-filter");
 
 export default {
+  mixins: [playlistMixin],
   props: {
     songs: {
       type: Array,
@@ -68,9 +64,14 @@ export default {
   mounted() {
     this.imageHeight = this.$refs.bgImage.clientHeight - 10;
     this.minTranslateY = -this.imageHeight + RESERVED_HEIGHT;
-    this.$refs.lists.style.top = `${this.imageHeight}px`;
+    this.$refs.list.style.top = `${this.imageHeight}px`;
   },
   methods: {
+    handlePlaylist(playlist) {
+      const bottom = playlist.length > 0 ? "60px" : "";
+      this.$refs.scrollList.$el.style.bottom = bottom;
+      this.$refs.scrollList.refresh()
+    },
     selectItem(item, index) {
       // 子组件只是把应该返回的数据返回回来，而不是看父组件使用什么
       this.selectPlay({
@@ -85,7 +86,7 @@ export default {
       this.scrollY = pos.y;
     },
     random() {
-      this.randomPlay({list: this.songs})
+      this.randomPlay({ list: this.songs });
     },
     ...mapActions(["selectPlay", "randomPlay"])
   },
@@ -171,7 +172,8 @@ export default {
     top: 0;
     bottom: 0;
     width: 100%;
-    .cube-scroll {
+    background-color: #fff;
+    .scroll-list{
       overflow: visible;
     }
   }

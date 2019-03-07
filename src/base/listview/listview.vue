@@ -1,5 +1,5 @@
 <template>
-  <cube-index-list :data="data" class="singers-content">
+  <cube-index-list :data="data" class="singers-content" ref="listview">
     <cube-index-list-group
       v-for="(group,index) in data"
       :key="index"
@@ -31,6 +31,9 @@ export default {
   methods: {
     selectItem(item) {
       this.$emit("select", item);
+    },
+    refresh() {
+      this.$refs.listview.refresh();
     }
   }
 };
