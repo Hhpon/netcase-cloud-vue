@@ -352,7 +352,6 @@ export default {
           if (this.playing) {
             this.currentLyric.play();
           }
-          console.log(this.currentLyric);
         })
         .catch(() => {
           this.currentLyric = null;

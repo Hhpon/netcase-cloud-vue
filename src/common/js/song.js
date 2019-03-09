@@ -42,6 +42,18 @@ export function createSong(musicData) {
     })
 }
 
+export function createPlaylistSong(playlist) {
+    return new Song({
+        singer: filterSinger(playlist.ar),
+        alId: playlist.al.id,
+        alPicUrl: playlist.al.picUrl,
+        alName: playlist.al.name,
+        alia: filterAlia(playlist.alia),
+        songName: playlist.name,
+        songId: playlist.id
+    })
+}
+
 function filterSinger(ar) {
     let ret = []
     if (!ar) {

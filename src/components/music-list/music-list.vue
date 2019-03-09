@@ -25,6 +25,7 @@ import { mapActions } from "vuex";
 import { playlistMixin } from "common/js/mixin";
 
 const RESERVED_HEIGHT = 40;
+const RADIUS_HEIGHT = 10;
 const transform = prefixStyle("transform");
 const backdrop = prefixStyle("backdrop-filter");
 
@@ -62,7 +63,7 @@ export default {
     this.scrollEvents = ["scroll"];
   },
   mounted() {
-    this.imageHeight = this.$refs.bgImage.clientHeight - 10;
+    this.imageHeight = this.$refs.bgImage.clientHeight - RADIUS_HEIGHT;
     this.minTranslateY = -this.imageHeight + RESERVED_HEIGHT;
     this.$refs.list.style.top = `${this.imageHeight}px`;
   },

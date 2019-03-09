@@ -14,9 +14,11 @@
     </cube-scroll>
   </div>
 </template>
+
 <script>
 import axios from "axios";
 import { playlistMixin } from "common/js/mixin";
+import { getTopList } from "api/rank";
 
 export default {
   mixins: [playlistMixin],
@@ -26,7 +28,7 @@ export default {
     };
   },
   mounted() {
-    this.getTopList();
+    this._getTopList();
   },
   methods: {
     handlePlaylist(playlist) {
@@ -34,19 +36,13 @@ export default {
       this.$refs.rank.style.bottom = bottom;
       this.$refs.scroll.refresh();
     },
-    getTopList() {
+    _getTopList() {
       let topListArr = [17, 0, 1, 2, 3, 4, 15];
-      for (let i = 0; i < topListArr.length; i++) {
-        axios
-          .get("http://localhost:3000/top/list", {
-            params: {
-              idx: topListArr[i]
-            }
-          })
-          .then(res => {
-            // console.log(res.data); // 打印列表数据
-            this.topLists.push(res.data.playlist);
-          });
+      for (let i of topListArr) {
+        getTopList(i).then(topList => {
+          this.topLists.push(topList);
+          console.log(topList);
+        });
       }
     }
   }

@@ -6,7 +6,12 @@
       <slider class="slider-self"></slider>
       <div class="recommend-list-header">推荐歌单</div>
       <ul class="songlist-ul">
-        <li v-for="(songlist,index) in songLists" :key="index" class="songList-item">
+        <li
+          @click="selectItem(songlist)"
+          v-for="(songlist,index) in songLists"
+          :key="index"
+          class="songList-item"
+        >
           <img v-lazy="songlist.picUrl">
           <div class="song-info">{{songlist.name}}</div>
           <div class="playCount-container">
@@ -28,12 +33,14 @@
       </ul>
       <cube-loading :size="40" class="loading_container" v-show="!newSongs.length"></cube-loading>
     </cube-scroll>
+    <router-view></router-view>
   </div>
 </template>
 <script>
 import axios from "axios";
 import Slider from "components/slider/slider";
 import { playlistMixin } from "common/js/mixin";
+import { mapMutations } from "vuex";
 
 export default {
   mixins: [playlistMixin],
@@ -53,6 +60,12 @@ export default {
     }, 1000);
   },
   methods: {
+    selectItem(songlist) {
+      this.$router.push({
+        path: `/recommend/${songlist.id}`
+      });
+      this.setDisc(songlist);
+    },
     handlePlaylist(playlist) {
       const bottom = playlist.length > 0 ? "60px" : 0;
       this.$refs.recommend.style.bottom = bottom;
@@ -80,7 +93,10 @@ export default {
         return b + "万";
       }
       return playCount;
-    }
+    },
+    ...mapMutations({
+      setDisc: "SET_DISC"
+    })
   }
 };
 </script>
