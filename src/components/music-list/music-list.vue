@@ -11,7 +11,14 @@
     </div>
     <div class="bg-layer" ref="layer"></div>
     <div class="list" ref="list">
-      <cube-scroll class="scroll-list" ref="scrollList" @scroll="scroll" :scroll-events="scrollEvents" :options="options" :data="songs">
+      <cube-scroll
+        class="scroll-list"
+        ref="scrollList"
+        @scroll="scroll"
+        :scroll-events="scrollEvents"
+        :options="options"
+        :data="songs"
+      >
         <song-list @select="selectItem" @random="random" :songs="songs"></song-list>
       </cube-scroll>
     </div>
@@ -71,7 +78,7 @@ export default {
     handlePlaylist(playlist) {
       const bottom = playlist.length > 0 ? "60px" : "";
       this.$refs.scrollList.$el.style.bottom = bottom;
-      this.$refs.scrollList.refresh()
+      this.$refs.scrollList.refresh();
     },
     selectItem(item, index) {
       // 子组件只是把应该返回的数据返回回来，而不是看父组件使用什么
@@ -133,6 +140,7 @@ export default {
   right: 0;
   bottom: 0px;
   left: 0;
+  background-color: #fff;
   .back {
     position: absolute;
     top: 0;
@@ -173,8 +181,7 @@ export default {
     top: 0;
     bottom: 0;
     width: 100%;
-    background-color: #fff;
-    .scroll-list{
+    .scroll-list {
       overflow: visible;
     }
   }

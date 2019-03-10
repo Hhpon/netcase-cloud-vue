@@ -25,7 +25,7 @@
       <cube-loading :size="40" class="loading_container" v-show="!songLists.length"></cube-loading>
       <div class="recommend-list-header">推荐歌曲</div>
       <ul class="songlist-ul">
-        <li v-for="(songlist,index) in newSongs" :key="index" class="songList-item">
+        <li @click="selectItem(songlist)" v-for="(songlist,index) in newSongs" :key="index" class="songList-item">
           <img v-lazy="songlist.song.album.blurPicUrl">
           <div class="newsong-info">{{songlist.name}}</div>
           <div class="song-author">{{songlist.song.artists[0].name}}</div>

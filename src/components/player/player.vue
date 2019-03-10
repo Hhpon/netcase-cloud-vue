@@ -267,13 +267,13 @@ export default {
       return `${minute}:${second}`;
     },
     onProgressBarChange(percent) {
-      const currentTime = this.currentSong.duration * percent;
-      this.$refs.audio.currentTime = this.duration * percent;
+      const currentTime = this.duration * percent;
+      this.$refs.audio.currentTime = currentTime;
       if (!this.playing) {
         this.togglePlaying();
       }
       if (this.currentLyric) {
-        this.currentLyric.seek(currentTime);
+        this.currentLyric.seek(currentTime * 1000); // 单位为毫秒
       }
     },
     changeMode() {

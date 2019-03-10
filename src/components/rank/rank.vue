@@ -1,7 +1,12 @@
 <template>
   <div class="rank" ref="rank">
     <cube-scroll class="rank-content" ref="scroll">
-      <div class="topList-container" v-for="(topList,index) in topLists" :key="index">
+      <div
+        @click="selectItem(topList)"
+        class="topList-container"
+        v-for="(topList,index) in topLists"
+        :key="index"
+      >
         <div class="topList-left">
           <img v-lazy="topList.coverImgUrl" height="100px">
         </div>
@@ -16,9 +21,9 @@
 </template>
 
 <script>
-import axios from "axios";
 import { playlistMixin } from "common/js/mixin";
 import { getTopList } from "api/rank";
+import { mapMutations } from "vuex";
 
 export default {
   mixins: [playlistMixin],
@@ -31,6 +36,12 @@ export default {
     this._getTopList();
   },
   methods: {
+    selectItem(topList) {
+      this.$router.push({
+        path: `/recommend/${topList.id}`
+      });
+      this.setDisc(topList);
+    },
     handlePlaylist(playlist) {
       const bottom = playlist.length > 0 ? "60px" : 0;
       this.$refs.rank.style.bottom = bottom;
@@ -44,7 +55,10 @@ export default {
           console.log(topList);
         });
       }
-    }
+    },
+    ...mapMutations({
+      setDisc: "SET_DISC"
+    })
   }
 };
 </script>

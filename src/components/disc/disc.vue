@@ -21,7 +21,7 @@ export default {
       return this.disc.name;
     },
     bgImage() {
-      return this.disc.picUrl;
+      return this.disc.picUrl || this.disc.coverImgUrl;
     },
     ...mapGetters(["disc"])
   },

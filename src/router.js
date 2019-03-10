@@ -39,7 +39,7 @@ export default new Router({
     {
       path: '/recommend',
       component: Recommend,
-      children:[
+      children: [
         {
           path: ':id',
           component: Disc
@@ -48,7 +48,13 @@ export default new Router({
     },
     {
       path: '/rank',
-      component: Rank
+      component: Rank,
+      children: [
+        {
+          path: ':id',
+          component: Disc
+        }
+      ]
     },
     {
       path: '/singer',
