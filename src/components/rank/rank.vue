@@ -17,6 +17,7 @@
         </div>
       </div>
     </cube-scroll>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -52,7 +53,6 @@ export default {
       for (let i of topListArr) {
         getTopList(i).then(topList => {
           this.topLists.push(topList);
-          console.log(topList);
         });
       }
     },

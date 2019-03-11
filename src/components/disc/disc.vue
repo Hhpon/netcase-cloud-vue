@@ -38,7 +38,6 @@ export default {
         return;
       }
       getSongDetail(this.disc.id).then(res => {
-        console.log(res);
         this.songs = this._normalizeSongs(res);
       });
     },
@@ -64,6 +63,7 @@ export default {
 .slide-enter,
 .slide-leave-to {
   transform: translate3d(100%, 0, 0);
+  opacity: 0;
 }
 </style>
 

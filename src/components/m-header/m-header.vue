@@ -1,16 +1,25 @@
 <template>
   <div class="header">
-    <!-- <img class="header-imgs" src="@/common/imgs/category.svg"> -->
     <svg class="icon header-imgs" aria-hidden="true">
       <use xlink:href="#icon-gengduo"></use>
     </svg>
     <div class="header-text">VMUSIC</div>
-    <!-- <img class="header-imgs" src="@/common/imgs/search.svg"> -->
-    <svg class="icon header-imgs" aria-hidden="true">
+    <svg @click="selectSearch" class="icon header-imgs" aria-hidden="true">
       <use xlink:href="#icon-sousuo"></use>
     </svg>
   </div>
 </template>
+
+<script>
+export default {
+  methods: {
+    selectSearch() {
+      this.$router.push("/search");
+    }
+  }
+};
+</script>
+
 <style lang="scss" scoped>
 @import "common/scss/variable.scss";
 
