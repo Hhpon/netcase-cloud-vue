@@ -1,13 +1,13 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import Recommend from 'components/recommend/recommend'
-import Rank from 'components/rank/rank'
-import Singer from 'components/singer/singer'
-import SingerDetail from 'components/singer-detail/singer-detail'
-import Disc from 'components/disc/disc'
-import Search from 'components/search/search'
+import Vue from "vue";
+import Router from "vue-router";
+import Recommend from "components/recommend/recommend";
+import Rank from "components/rank/rank";
+import Singer from "components/singer/singer";
+import SingerDetail from "components/singer-detail/singer-detail";
+import Disc from "components/disc/disc";
+import Search from "components/search/search";
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
   routes: [
@@ -34,42 +34,52 @@ export default new Router({
     //   ]
     // },
     {
-      path: '/',
-      redirect: '/recommend'
+      path: "/",
+      redirect: "/recommend"
     },
     {
-      path: '/recommend',
+      path: "/recommend",
       component: Recommend,
       children: [
         {
-          path: ':id',
+          path: ":id",
           component: Disc
         }
       ]
     },
     {
-      path: '/rank',
+      path: "/rank",
       component: Rank,
       children: [
         {
-          path: ':id',
+          path: ":id",
           component: Disc
         }
       ]
     },
     {
-      path: '/singer',
+      path: "/singer",
       component: Singer,
       children: [
         {
-          path: ':id',
+          path: ":id",
           component: SingerDetail
         }
       ]
     },
     {
-      path: '/search',
-      component: Search
+      path: "/search",
+      component: Search,
+      children: [
+        {
+          path: "singer/:id",
+          component: SingerDetail
+        },
+        {
+          path: "disc/:id",
+          component: Disc
+        }
+      ]
     }
   ]
-})
+});

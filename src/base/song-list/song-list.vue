@@ -91,7 +91,7 @@ export default {
       }
       .singer {
         width: 90%;
-        font-size: 12px;
+        font-size: $font-size-small;
         color: $color-light;
         padding-top: 5px;
         @include no-row;

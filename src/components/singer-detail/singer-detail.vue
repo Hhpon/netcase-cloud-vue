@@ -69,6 +69,7 @@ export default {
 .slide-enter,
 .slide-leave-to {
   transform: translate3d(100%, 0, 0);
+  opacity: 0;
 }
 </style>
 

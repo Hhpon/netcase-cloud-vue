@@ -1,6 +1,6 @@
 <template>
   <div class="search-box">
-    <svg class="icon icon-search" aria-hidden="true">
+    <svg @click="back" class="icon icon-search" aria-hidden="true">
       <use xlink:href="#icon-right"></use>
     </svg>
     <input ref="query" type="text" class="box" v-model="query" :placeholder="placeholder">
@@ -24,6 +24,9 @@ export default {
     };
   },
   methods: {
+    back() {
+      this.$router.back();
+    },
     clear() {
       this.query = "";
     },

@@ -25,7 +25,12 @@
       <cube-loading :size="40" class="loading_container" v-show="!songLists.length"></cube-loading>
       <div class="recommend-list-header">推荐歌曲</div>
       <ul class="songlist-ul">
-        <li @click="selectItem(songlist)" v-for="(songlist,index) in newSongs" :key="index" class="songList-item">
+        <li
+          @click="selectItem(songlist)"
+          v-for="(songlist,index) in newSongs"
+          :key="index"
+          class="songList-item"
+        >
           <img v-lazy="songlist.song.album.blurPicUrl">
           <div class="newsong-info">{{songlist.name}}</div>
           <div class="song-author">{{songlist.song.artists[0].name}}</div>
@@ -37,8 +42,8 @@
   </div>
 </template>
 <script>
-import axios from "axios";
 import Slider from "components/slider/slider";
+import { getSongList, getNewSong } from "api/recommend";
 import { playlistMixin } from "common/js/mixin";
 import { mapMutations } from "vuex";
 
@@ -72,12 +77,12 @@ export default {
       this.$refs.scroll.refresh();
     },
     getSonglist() {
-      axios.get("http://localhost:3000/personalized").then(res => {
+      getSongList().then(res => {
         this.songLists = res.data.result;
       });
     },
     getNewSong() {
-      axios.get("http://localhost:3000/personalized/newsong").then(res => {
+      getNewSong().then(res => {
         for (let i = 0; i < 9; i++) {
           this.newSongs.push(res.data.result[i]);
         }
