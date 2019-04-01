@@ -4,9 +4,11 @@
     :data="result"
     :options="options"
     @pulling-up="onPullingUp"
+    :scrollEvents="scrollEvents"
     class="suggest"
+    @before-scroll-start="beforeScroll"
   >
-    <div class="bestMatch">最佳匹配</div>
+    <div class="bestMatch" v-show="result.length||searchSuggest.length">最佳匹配</div>
     <ul class="suggest-list">
       <li
         @click="selectSuggset(item)"
@@ -32,6 +34,10 @@
         <div class="singer">{{item.singer}}</div>
       </li>
     </ul>
+    <div
+      class="no-result-wrapper"
+      v-show="!result.length&&!hasMore&&!searchSuggest.length"
+    >抱歉，暂无搜索结果</div>
   </cube-scroll>
 </template>
 
@@ -58,7 +64,8 @@ export default {
         pullUpLoad: true
       },
       hasMore: true,
-      searchSuggest: []
+      searchSuggest: [],
+      scrollEvents: ["before-scroll-start"]
     };
   },
   methods: {
@@ -72,6 +79,10 @@ export default {
         item.alPicUrl = res.data.album.picUrl;
         this.insertSong(item);
       });
+      this.$emit("saveSearch");
+    },
+    beforeScroll() {
+      this.$emit("scrollList");
     },
     selectSuggset(item) {
       if ("img1v1Url" in item) {
@@ -88,6 +99,7 @@ export default {
         });
         this.setDisc(item);
       }
+      this.$emit("saveSearch"); // 当我们点击搜索结果的时候我们把搜索的关键词保存在本地存储中
     },
     suggestTitle(item) {
       if ("img1v1Url" in item) {
@@ -119,14 +131,15 @@ export default {
       this.hasMore = true;
       this.offset = 0;
       this.$refs.suggest.scrollTo(0, 0);
-      search(this.query, this.offset).then(res => {
-        console.log(res.data);
-        if (res.data.code === ERR_OK) {
-          this.result = this._normalizeSongs(res.data.result.songs);
-          this._checkMore(res.data.result);
-        }
-      });
-      this._searchSuggest();
+      if (this.query) {
+        search(this.query, this.offset).then(res => {
+          if (res.data.code === ERR_OK) {
+            this.result = this._normalizeSongs(res.data.result.songs);
+            this._checkMore(res.data.result);
+          }
+        });
+        this._searchSuggest();
+      }
     },
     _searchSuggest() {
       this.searchSuggest = [];
@@ -150,6 +163,9 @@ export default {
     _normalizeSongs(list) {
       console.log(list);
       let ret = [];
+      if (!list) {
+        return ret;
+      }
       list.forEach(item => {
         if (item.id && item.album.id) {
           ret.push(createSearchSong(item));
@@ -214,8 +230,8 @@ export default {
   .no-result-wrapper {
     position: absolute;
     width: 100%;
-    top: 50%;
-    transform: translateY(-50%);
+    top: 40%;
+    text-align: center;
   }
 }
 </style>

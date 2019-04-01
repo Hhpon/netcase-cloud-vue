@@ -11,6 +11,8 @@
 </template>
 
 <script>
+import { debounce } from "common/js/util.js";
+
 export default {
   props: {
     placeholder: {
@@ -24,6 +26,9 @@ export default {
     };
   },
   methods: {
+    blur() {
+      this.$refs.query.blur();
+    },
     back() {
       this.$router.back();
     },
@@ -35,9 +40,12 @@ export default {
     }
   },
   created() {
-    this.$watch("query", newQuery => {
-      this.$emit("query", newQuery);
-    });
+    this.$watch(
+      "query",
+      debounce(newQuery => {
+        this.$emit("query", newQuery);
+      }, 200)
+    );
   }
 };
 </script>

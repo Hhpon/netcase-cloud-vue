@@ -2,25 +2,42 @@
   <transition name="search">
     <div class="search-box-wrapper">
       <search-box ref="searchBox" @query="query"></search-box>
-      <div class="shortcut-wrapper" v-show="!newQuery">
-        <div class="shortcut">
-          <div class="hot-key">
-            <h1 class="title">热门搜索</h1>
-            <ul>
-              <li
-                @click="addQuery(item.first)"
-                class="item"
-                v-for="(item,index) in hotKey"
-                :key="index"
-              >
-                <span>{{item.first}}</span>
-              </li>
-            </ul>
+      <div ref="shortcut-wrapper" class="shortcut-wrapper" v-show="!newQuery">
+        <cube-scroll ref="scroll" :data="hotKey">
+          <div class="shortcut">
+            <div class="hot-key">
+              <h1 class="title">热门搜索</h1>
+              <ul>
+                <li
+                  @click="addQuery(item.first)"
+                  class="item"
+                  v-for="(item,index) in hotKey"
+                  :key="index"
+                >
+                  <span>{{item.first}}</span>
+                </li>
+              </ul>
+            </div>
+            <div class="search-history">
+              <div class="search-title">
+                <h1 class="title">搜索历史</h1>
+                <svg @click="clearSearchHistory" class="icon" aria-hidden="true">
+                  <use xlink:href="#icon-laji"></use>
+                </svg>
+              </div>
+              <div class="search-list">
+                <search-list
+                  @select="addQuery"
+                  @deleteOne="deleteSearchHistory"
+                  :searchHistory="searchHistory"
+                ></search-list>
+              </div>
+            </div>
           </div>
-        </div>
+        </cube-scroll>
       </div>
       <div class="suggest-scroll" v-show="newQuery">
-        <suggest ref="suggest" :query="newQuery"></suggest>
+        <suggest @saveSearch="saveSearch" @scrollList="scrollList" ref="suggest" :query="newQuery"></suggest>
       </div>
       <router-view></router-view>
     </div>
@@ -29,17 +46,19 @@
 
 <script>
 import SearchBox from "base/search-box/search-box";
+import SearchList from "base/search-list/search-list";
+import { playlistMixin } from "common/js/mixin";
 import { getHotKey } from "api/search";
 import { ERR_OK } from "common/js/config";
 import Suggest from "components/suggest/suggest";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
+  mixins: [playlistMixin],
   components: {
     SearchBox,
-    Suggest
-  },
-  created() {
-    this._getHotKey();
+    Suggest,
+    SearchList
   },
   data() {
     return {
@@ -47,9 +66,26 @@ export default {
       newQuery: ""
     };
   },
+  computed: {
+    ...mapGetters(["searchHistory"])
+  },
+  created() {
+    this._getHotKey();
+  },
   methods: {
+    handlePlaylist(playlist) {
+      const bottom = playlist.length > 0 ? "60px" : 0;
+      this.$refs["shortcut-wrapper"].style.bottom = bottom;
+      this.$refs.scroll.refresh();
+    },
+    saveSearch() {
+      this.saveSearchHistory(this.newQuery);
+    },
     query(newQuery) {
       this.newQuery = newQuery;
+    },
+    scrollList() {
+      this.$refs.searchBox.blur();
     },
     _getHotKey() {
       getHotKey().then(res => {
@@ -60,7 +96,12 @@ export default {
     },
     addQuery(query) {
       this.$refs.searchBox.setQuery(query);
-    }
+    },
+    ...mapActions([
+      "saveSearchHistory",
+      "deleteSearchHistory",
+      "clearSearchHistory"
+    ])
   }
 };
 </script>
@@ -108,6 +149,18 @@ export default {
           font-size: $font-size-medium;
           border: 1px solid $color-light;
           color: $color-light;
+        }
+      }
+      .search-history {
+        margin: 0 20px;
+        color: $color-light;
+        font-size: $font-size-medium;
+        .search-title {
+          display: flex;
+          margin-bottom: 20px;
+          .title {
+            flex: 1;
+          }
         }
       }
     }
