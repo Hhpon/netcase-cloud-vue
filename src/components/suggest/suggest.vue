@@ -74,6 +74,9 @@ export default {
       setDisc: "SET_DISC"
     }),
     ...mapActions(["insertSong"]),
+    refresh() {
+      this.$refs.suggest.refresh();
+    },
     selectItem(item) {
       getAlbum(item.alId).then(res => {
         item.alPicUrl = res.data.album.picUrl;

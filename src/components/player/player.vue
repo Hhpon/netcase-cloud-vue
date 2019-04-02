@@ -101,9 +101,9 @@
           <h2 class="name" v-html="currentSong.songName"></h2>
           <p class="desc" v-html="currentSong.singer"></p>
         </div>
-        <div class="control">
+        <div @click.stop="togglePlaying" class="control">
           <progress-circle :radius="radius" :percent="percent">
-            <svg @click.stop="togglePlaying" class="icon icon-mini" aria-hidden="true">
+            <svg class="icon icon-mini" aria-hidden="true">
               <use v-bind:xlink:href="playIcon"></use>
             </svg>
           </progress-circle>
@@ -194,6 +194,7 @@ export default {
       this.setFullScreen(true);
     },
     togglePlaying() {
+      console.log("togglePlaying");
       if (!this.songReady) {
         return;
       }
