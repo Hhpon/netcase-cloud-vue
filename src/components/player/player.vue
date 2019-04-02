@@ -372,6 +372,7 @@ export default {
     },
     middleTouchStart(e) {
       this.touch.initiated = true;
+      this.touch.moved = false;
       const touch = e.touches[0];
       this.touch.startX = touch.pageX;
       this.touch.startY = touch.pageY;
@@ -386,12 +387,16 @@ export default {
       if (Math.abs(deltaY) > Math.abs(deltaX)) {
         return;
       }
+      if (!this.touch.moved) {
+        this.touch.moved = true;
+      }
       const left = this.currentShow === "cd" ? 0 : -window.innerWidth;
       const offsetWidth = Math.min(
         0,
         Math.max(-window.innerWidth, left + deltaX)
       );
       this.touch.percent = Math.abs(offsetWidth / window.innerWidth);
+      console.log(this.touch.percent);
       this.$refs.lyricList.$el.style[
         transform
       ] = `translate3d(${offsetWidth}px,0,0)`;
@@ -401,9 +406,13 @@ export default {
       this.$refs.middleL.style[transitionDuration] = 0;
     },
     middleTouchEnd() {
+      if (!this.touch.moved) {
+        return;
+      }
       let offsetWidth;
       let opacity = 0;
       if (this.currentShow === "cd") {
+        console.log(this.touch.percent);
         if (this.touch.percent > 0.1) {
           offsetWidth = -window.innerWidth;
           opacity = 0;
@@ -413,6 +422,7 @@ export default {
           opacity = 1;
         }
       } else {
+        console.log(this.touch.percent);
         if (this.touch.percent < 0.9) {
           offsetWidth = 0;
           this.currentShow = "cd";
