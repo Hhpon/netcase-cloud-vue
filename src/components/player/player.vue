@@ -109,12 +109,13 @@
           </progress-circle>
         </div>
         <div class="control">
-          <svg class="icon" aria-hidden="true">
+          <svg @click.stop="showPlayList" class="icon" aria-hidden="true">
             <use xlink:href="#icon-lie-biao"></use>
           </svg>
         </div>
       </div>
     </transition>
+    <playlist ref="playlist"></playlist>
     <audio
       ref="audio"
       :src="songUrl"
@@ -132,6 +133,7 @@ import { prefixStyle } from "common/js/dom";
 import { getSongUrl } from "api/song";
 import progressBar from "base/progress-bar/progress-bar";
 import progressCircle from "base/progress-circle/progress-circle";
+import Playlist from "components/playlist/playlist.vue";
 import { playMode } from "common/js/config";
 import { shuffle } from "common/js/util";
 import Lyric from "lyric-parser";
@@ -187,6 +189,9 @@ export default {
     this.touch = {};
   },
   methods: {
+    showPlayList() {
+      this.$refs.playlist.show();
+    },
     back() {
       this.setFullScreen(false);
     },
@@ -255,7 +260,8 @@ export default {
       this.duration = this.$refs.audio.duration;
     },
     error() {
-      // 当我们点击上一曲下一曲的时候，如果进入到的歌曲由于某些原因加载失败，ready函数永远不会执行，按钮就会失效。所以为了保证这种情况发生时可以继续使用，定义了这个方法
+      /*当我们点击上一曲下一曲的时候，如果进入到的歌曲由于某些原因加载失败，
+      ready函数永远不会执行，按钮就会失效。所以为了保证这种情况发生时可以继续使用，定义了这个方法*/
       this.songReady = true;
     },
     updateTime(e) {
@@ -396,7 +402,6 @@ export default {
         Math.max(-window.innerWidth, left + deltaX)
       );
       this.touch.percent = Math.abs(offsetWidth / window.innerWidth);
-      console.log(this.touch.percent);
       this.$refs.lyricList.$el.style[
         transform
       ] = `translate3d(${offsetWidth}px,0,0)`;
@@ -412,7 +417,6 @@ export default {
       let offsetWidth;
       let opacity = 0;
       if (this.currentShow === "cd") {
-        console.log(this.touch.percent);
         if (this.touch.percent > 0.1) {
           offsetWidth = -window.innerWidth;
           opacity = 0;
@@ -422,7 +426,6 @@ export default {
           opacity = 1;
         }
       } else {
-        console.log(this.touch.percent);
         if (this.touch.percent < 0.9) {
           offsetWidth = 0;
           this.currentShow = "cd";
@@ -488,7 +491,8 @@ export default {
   },
   components: {
     progressBar,
-    progressCircle
+    progressCircle,
+    Playlist
   }
 };
 </script>

@@ -77,7 +77,7 @@ export default {
   methods: {
     handlePlaylist(playlist) {
       const bottom = playlist.length > 0 ? "60px" : "";
-      this.$refs.scrollList.$el.style.bottom = bottom;
+      this.$refs.list.style.bottom = bottom;
       this.$refs.scrollList.refresh();
     },
     selectItem(item, index) {

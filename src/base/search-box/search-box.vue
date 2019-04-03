@@ -4,7 +4,7 @@
       <use xlink:href="#icon-right"></use>
     </svg>
     <input ref="query" type="text" class="box" v-model="query" :placeholder="placeholder">
-    <svg @click="clear" v-show="query" class="icon icon-dismiss" aria-hidden="true">
+    <svg @click="clear" class="icon icon-dismiss" aria-hidden="true">
       <use xlink:href="#icon-cha"></use>
     </svg>
   </div>
