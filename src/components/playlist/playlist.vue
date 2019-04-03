@@ -15,7 +15,12 @@
         </div>
         <cube-scroll ref="listContent" :data="sequenceList" class="list-content">
           <ul>
-            <li class="list-item" v-for="(item,index) in sequenceList" :key="index">
+            <li
+              @click="selectItem(item,index)"
+              class="list-item"
+              v-for="(item,index) in sequenceList"
+              :key="index"
+            >
               <svg class="icon icon-current" aria-hidden="true">
                 <use :xlink:href="getCurrentIcon(item)"></use>
               </svg>
@@ -26,24 +31,28 @@
             </li>
           </ul>
         </cube-scroll>
+        <div class="list-close" @click="hide">
+          <span>关闭</span>
+        </div>
       </div>
     </div>
   </transition>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
+import { playMode } from "common/js/config";
 
 export default {
   computed: {
     modeText() {
-      return this.mode === 0
+      return this.mode === playMode.sequence
         ? "顺序播放"
-        : this.mode === 1
+        : this.mode === playMode.loop
         ? "循环播放"
         : "随机播放";
     },
-    ...mapGetters(["sequenceList", "currentSong", "mode"])
+    ...mapGetters(["sequenceList", "currentSong", "mode", "playlist"]) //sequenceList 为正常列表，playlist 为播放列表
   },
   data() {
     return {
@@ -51,6 +60,16 @@ export default {
     };
   },
   methods: {
+    selectItem(item, index) {
+      if (this.mode === playMode.random) {
+        index = this.playlist.findIndex(song => {
+          return song.songId === item.songId;
+        });
+      }
+      console.log(index);
+      this.setCurrentIndex(index); // 直接写无法兼容随机播放的情况，所以需要
+      this.setPlayingState(true);
+    },
     getCurrentIcon(item) {
       if (this.currentSong.songId === item.songId) {
         return "#icon-laba";
@@ -61,11 +80,15 @@ export default {
       this.showFlag = true;
       setTimeout(() => {
         this.$refs.listContent.refresh();
-      }, 20);  // 猜测20毫秒为v-show作用时间
+      }, 20); // 猜测20毫秒为v-show作用时间
     },
     hide() {
       this.showFlag = false;
-    }
+    },
+    ...mapMutations({
+      setCurrentIndex: "SET_CURRENT_INDEX",
+      setPlayingState: "SET_PLAYING_STATE"
+    })
   }
 };
 </script>
@@ -133,6 +156,12 @@ export default {
           color: $color-text-theme;
         }
       }
+    }
+    .list-close {
+      line-height: 50px;
+      text-align: center;
+      font-size: $font-size-medium-x;
+      background-color: $color-background-w;
     }
   }
 }

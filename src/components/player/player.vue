@@ -199,7 +199,6 @@ export default {
       this.setFullScreen(true);
     },
     togglePlaying() {
-      console.log("togglePlaying");
       if (!this.songReady) {
         return;
       }
@@ -458,6 +457,15 @@ export default {
         scale
       };
     },
+    _getSongUrl(songId) {
+      getSongUrl(songId).then(res => {
+        this.songUrl = res;
+        this.timer = setTimeout(() => {
+          this.$refs.audio.play();
+          this.getLyric();
+        }, 1000);
+      });
+    },
     ...mapMutations({
       setFullScreen: "SET_FULL_SCREEN",
       setPlayingState: "SET_PLAYING_STATE",
@@ -473,14 +481,13 @@ export default {
       }
       if (this.currentLyric) {
         this.currentLyric.stop();
+        this.currentTime = 0;
+        this.playingLyric = "";
+        this.currentLineNum = 0;
+        this.songUrl = "";
       }
-      getSongUrl(this.currentSong.songId).then(res => {
-        this.songUrl = res;
-        setTimeout(() => {
-          this.$refs.audio.play();
-          this.getLyric();
-        }, 1000);
-      });
+      clearTimeout(this.timer);
+      this._getSongUrl(newSong.songId);
     },
     playing(newPlaying) {
       const audio = this.$refs.audio;
