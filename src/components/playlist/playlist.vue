@@ -18,6 +18,7 @@
             <li
               @click="selectItem(item,index)"
               class="list-item"
+              ref="listItem"
               v-for="(item,index) in sequenceList"
               :key="index"
             >
@@ -66,9 +67,14 @@ export default {
           return song.songId === item.songId;
         });
       }
-      console.log(index);
-      this.setCurrentIndex(index); // 直接写无法兼容随机播放的情况，所以需要
+      this.setCurrentIndex(index); // 直接写无法兼容随机播放的情况，所以需要判断是什么模式
       this.setPlayingState(true);
+    },
+    scrollToCurrent(current) {
+      let index = this.sequenceList.findIndex(song => {
+        return song.songId === current.songId;
+      });
+      this.$refs.listContent.scrollToElement(this.$refs.listItem[index]);
     },
     getCurrentIcon(item) {
       if (this.currentSong.songId === item.songId) {
@@ -80,6 +86,7 @@ export default {
       this.showFlag = true;
       setTimeout(() => {
         this.$refs.listContent.refresh();
+        this.scrollToCurrent(this.currentSong);
       }, 20); // 猜测20毫秒为v-show作用时间
     },
     hide() {
@@ -89,6 +96,14 @@ export default {
       setCurrentIndex: "SET_CURRENT_INDEX",
       setPlayingState: "SET_PLAYING_STATE"
     })
+  },
+  watch: {
+    currentSong(newSong, oldSong) {
+      if (!this.showFlag || newSong.songId === oldSong.songId) {
+        return;
+      }
+      this.scrollToCurrent(newSong);
+    }
   }
 };
 </script>

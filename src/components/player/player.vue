@@ -463,7 +463,7 @@ export default {
         this.timer = setTimeout(() => {
           this.$refs.audio.play();
           this.getLyric();
-        }, 1000);
+        }, 100); // 原来设置的间隔时间是1000ms,但是有了这个回调函数以后这个时间定时器实际上已经没有作用
       });
     },
     ...mapMutations({
