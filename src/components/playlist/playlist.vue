@@ -4,17 +4,17 @@
       <div class="list-wrapper" @click.stop>
         <div class="list-header">
           <h1 class="title">
-            <svg class="icon" aria-hidden="true">
-              <use xlink:href="#icon-danquxunhuan1"></use>
+            <svg @click="changeMode" class="icon icon-mode" aria-hidden="true">
+              <use :xlink:href="iconMode"></use>
             </svg>
             <span class="text">{{modeText}}</span>
-            <svg class="icon" aria-hidden="true">
+            <svg @click.stop="showConfirm" class="icon" aria-hidden="true">
               <use xlink:href="#icon-laji"></use>
             </svg>
           </h1>
         </div>
         <cube-scroll ref="listContent" :data="sequenceList" class="list-content">
-          <ul>
+          <transition-group name="list" tag="ul">
             <li
               @click="selectItem(item,index)"
               class="list-item"
@@ -26,25 +26,32 @@
                 <use :xlink:href="getCurrentIcon(item)"></use>
               </svg>
               <span class="text">{{item.songName}}</span>
-              <svg class="icon icon-item" aria-hidden="true">
+              <svg @click.stop="deleteSong(item)" class="icon icon-item" aria-hidden="true">
                 <use xlink:href="#icon-cha"></use>
               </svg>
             </li>
-          </ul>
+          </transition-group>
         </cube-scroll>
         <div class="list-close" @click="hide">
           <span>关闭</span>
         </div>
       </div>
+      <confirm ref="confirm" @confirm="confirmClear" content="是否清空播放列表" confirmBtnText="清空"></confirm>
     </div>
   </transition>
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import { playMode } from "common/js/config";
+import Confirm from "base/confirm/confirm";
+import { playerMixin } from "common/js/mixin";
 
 export default {
+  mixins: [playerMixin],
+  components: {
+    Confirm
+  },
   computed: {
     modeText() {
       return this.mode === playMode.sequence
@@ -52,8 +59,7 @@ export default {
         : this.mode === playMode.loop
         ? "循环播放"
         : "随机播放";
-    },
-    ...mapGetters(["sequenceList", "currentSong", "mode", "playlist"]) //sequenceList 为正常列表，playlist 为播放列表
+    }
   },
   data() {
     return {
@@ -61,6 +67,13 @@ export default {
     };
   },
   methods: {
+    confirmClear() {
+      this.clearSongList();
+      this.hide();
+    },
+    showConfirm() {
+      this.$refs.confirm.show();
+    },
     selectItem(item, index) {
       if (this.mode === playMode.random) {
         index = this.playlist.findIndex(song => {
@@ -92,10 +105,13 @@ export default {
     hide() {
       this.showFlag = false;
     },
-    ...mapMutations({
-      setCurrentIndex: "SET_CURRENT_INDEX",
-      setPlayingState: "SET_PLAYING_STATE"
-    })
+    deleteSong(item) {
+      this.deleteOne(item);
+      if (this.playlist.length === 0) {
+        this.hide();
+      }
+    },
+    ...mapActions(["deleteOne", "clearSongList"])
   },
   watch: {
     currentSong(newSong, oldSong) {
@@ -144,6 +160,10 @@ export default {
       .title {
         display: flex;
         align-items: center;
+        font-size: $font-size-medium;
+        .icon-mode{
+          font-size: $font-size-large;
+        }
         .text {
           flex: 1;
           margin-left: 10px;
@@ -160,6 +180,14 @@ export default {
         padding: 0 30px 0 20px;
         overflow: hidden;
         font-size: $font-size-medium;
+        &.list-enter-active,
+        &.list-leave-active {
+          transition: all 0.1s linear;
+        }
+        &.list-enter,
+        &.list-leave-to {
+          height: 0;
+        }
         .icon-current {
           color: $color-text-theme;
           margin-right: 5px;

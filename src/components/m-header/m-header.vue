@@ -1,12 +1,16 @@
 <template>
   <div class="header">
-    <svg class="icon header-imgs" aria-hidden="true">
-      <use xlink:href="#icon-gengduo"></use>
-    </svg>
+    <router-link to='/user'>
+      <svg class="icon header-imgs" aria-hidden="true">
+        <use xlink:href="#icon-gengduo"></use>
+      </svg>
+    </router-link>
     <div class="header-text">VMUSIC</div>
-    <svg @click="selectSearch" class="icon header-imgs" aria-hidden="true">
-      <use xlink:href="#icon-sousuo"></use>
-    </svg>
+    <router-link to="/search">
+      <svg class="icon header-imgs" aria-hidden="true">
+        <use xlink:href="#icon-sousuo"></use>
+      </svg>
+    </router-link>
   </div>
 </template>
 

@@ -1,5 +1,5 @@
 import { playMode } from "common/js/config";
-import { loadSearch } from "common/js/cache";
+import { loadSearch, loadFavorite } from "common/js/cache";
 
 const state = {
   singer: {},
@@ -10,7 +10,8 @@ const state = {
   mode: playMode.sequence,
   currentIndex: -1,
   disc: {},
-  searchHistory: loadSearch()
+  searchHistory: loadSearch(),
+  favoriteList: loadFavorite()
 };
 
 export default state;

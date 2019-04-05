@@ -84,8 +84,8 @@
               </svg>
             </div>
             <div class="i-right icon-container">
-              <svg class="icon" aria-hidden="true">
-                <use xlink:href="#icon-guanzhu1"></use>
+              <svg @click="toggleFavorite(currentSong)" class="icon" aria-hidden="true">
+                <use :xlink:href="getFavoriteIcon(currentSong)"></use>
               </svg>
             </div>
           </div>
@@ -127,7 +127,7 @@
   </div>
 </template>
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 import animations from "create-keyframe-animation";
 import { prefixStyle } from "common/js/dom";
 import { getSongUrl } from "api/song";
@@ -135,13 +135,14 @@ import progressBar from "base/progress-bar/progress-bar";
 import progressCircle from "base/progress-circle/progress-circle";
 import Playlist from "components/playlist/playlist.vue";
 import { playMode } from "common/js/config";
-import { shuffle } from "common/js/util";
 import Lyric from "lyric-parser";
+import { playerMixin } from "common/js/mixin";
 
 const transform = prefixStyle("transform");
 const transitionDuration = prefixStyle("transitionDuration");
 
 export default {
+  mixins: [playerMixin],
   data() {
     return {
       songUrl: "",
@@ -168,27 +169,31 @@ export default {
     percent() {
       return this.currentTime / this.duration;
     },
-    iconMode() {
-      return this.mode === playMode.sequence
-        ? "#icon-danquxunhuan1"
-        : this.mode === playMode.loop
-        ? "#icon-danquxunhuan"
-        : "#icon-bofangye-caozuolan-suijibofang";
-    },
-    ...mapGetters([
-      "fullScreen",
-      "playlist",
-      "currentSong",
-      "playing",
-      "currentIndex",
-      "mode",
-      "sequenceList"
-    ])
+    ...mapGetters(["fullScreen", "playing", "currentIndex", "favoriteList"])
   },
   created() {
     this.touch = {};
   },
   methods: {
+    getFavoriteIcon(song) {
+      if (this.isFavorite(song)) {
+        return "#icon-guanzhu";
+      }
+      return "#icon-guanzhu3";
+    },
+    toggleFavorite(song) {
+      if (this.isFavorite(song)) {
+        this.deleteFavoriteList(song);
+      } else {
+        this.saveFavoriteList(song);
+      }
+    },
+    isFavorite(song) {
+      let index = this.favoriteList.findIndex(item => {
+        return song.songId === item.songId;
+      });
+      return index > -1;
+    },
     showPlayList() {
       this.$refs.playlist.show();
     },
@@ -281,24 +286,6 @@ export default {
       if (this.currentLyric) {
         this.currentLyric.seek(currentTime * 1000); // 单位为毫秒
       }
-    },
-    changeMode() {
-      const mode = (this.mode + 1) % 3;
-      this.setPlayMode(mode);
-      let list = null;
-      if (mode === playMode.random) {
-        list = shuffle(this.sequenceList);
-      } else {
-        list = this.sequenceList;
-      }
-      this.resetCurrentIndex(list);
-      this.setPlayList(list);
-    },
-    resetCurrentIndex(list) {
-      let index = list.findIndex(item => {
-        return item.songId === this.currentSong.songId;
-      });
-      this.setCurrentIndex(index);
     },
     _pad(num, n = 2) {
       let len = num.toString().length;
@@ -468,14 +455,15 @@ export default {
     },
     ...mapMutations({
       setFullScreen: "SET_FULL_SCREEN",
-      setPlayingState: "SET_PLAYING_STATE",
-      setCurrentIndex: "SET_CURRENT_INDEX",
-      setPlayMode: "SET_PLAY_MODE",
       setPlayList: "SET_PLAYLIST"
-    })
+    }),
+    ...mapActions(["saveFavoriteList", "deleteFavoriteList"])
   },
   watch: {
     currentSong(newSong, oldSong) {
+      if (!newSong.songId) {
+        return;
+      }
       if (newSong.songId === oldSong.songId) {
         return;
       }

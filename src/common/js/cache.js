@@ -3,6 +3,9 @@ import storage from "good-storage";
 const SEARCH_KEY = "__search__";
 const SEARCH_MAX_LENGTH = 15;
 
+const FAVORITE_KET = '__favorite__'
+const FAVORITE_MAX_LENGTH = 200
+
 function insertArray(arr, query, compare, maxLen) {
   const index = arr.findIndex(compare);
   if (index === 0) {
@@ -54,4 +57,26 @@ export function deleteSearch(query) {
 export function clearSearch() {
   storage.remove(SEARCH_KEY);
   return [];
+}
+
+export function saveFavorite(song) {
+  let favorites = storage.get(FAVORITE_KET, [])
+  insertArray(favorites, song, item => {
+    return item.songId === song.songId
+  }, FAVORITE_MAX_LENGTH)
+  storage.set(FAVORITE_KET, favorites)
+  return favorites
+}
+
+export function deleteFavorite(song) {
+  let favorites = storage.get(FAVORITE_KET, [])
+  deleteFromArray(favorites, item => {
+    return item.songId = song.songId
+  })
+  storage.set(FAVORITE_KET, favorites)
+  return favorites
+}
+
+export function loadFavorite() {
+  return storage.get(FAVORITE_KET, [])
 }

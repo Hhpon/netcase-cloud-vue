@@ -6,6 +6,7 @@ import Singer from "components/singer/singer";
 import SingerDetail from "components/singer-detail/singer-detail";
 import Disc from "components/disc/disc";
 import Search from "components/search/search";
+import UserCenter from 'components/user-center/user-center'
 
 Vue.use(Router);
 
@@ -80,6 +81,10 @@ export default new Router({
           component: Disc
         }
       ]
+    },
+    {
+      path: '/user',
+      component: UserCenter
     }
   ]
 });
