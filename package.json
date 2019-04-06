@@ -18,10 +18,10 @@
     "lyric-parser": "git+git@github.com:Hhpon/lyric-parser.git",
     "pinyin": "^2.8.3",
     "register-service-worker": "^1.5.2",
-    "vue": "^2.5.17",
+    "vue": "^2.6.10",
     "vue-lazyload": "^1.2.6",
-    "vue-router": "^3.0.1",
-    "vuex": "^3.0.1"
+    "vue-router": "^3.0.2",
+    "vuex": "^3.1.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.2.0",
@@ -37,7 +37,7 @@
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
     "vue-cli-plugin-cube-ui": "^0.2.4",
-    "vue-template-compiler": "^2.5.17",
+    "vue-template-compiler": "^2.6.10",
     "webpack-post-compile-plugin": "^1.0.0"
   },
   "transformModules": {

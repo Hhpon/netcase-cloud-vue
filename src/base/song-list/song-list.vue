@@ -30,7 +30,7 @@ export default {
   },
   methods: {
     selectItem(item, index) {
-      // 本组件为基础组件，所以不去写任何逻辑，只派发这个事件，只告诉外面的父组件，这个东西被电击了，以及点击的是什么东西
+      // 本组件为基础组件，所以不去写任何逻辑，只派发这个事件，只告诉外面的父组件，这个东西被点击了，以及点击的是什么东西
       this.$emit("select", item, index);
     },
     getSongName(song) {

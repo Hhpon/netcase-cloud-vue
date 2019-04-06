@@ -119,7 +119,7 @@
     <audio
       ref="audio"
       :src="songUrl"
-      @canplay="ready"
+      @play="ready"
       @error="error"
       @timeupdate="updateTime"
       @ended="end"
@@ -232,6 +232,7 @@ export default {
       }
       if (this.playlist.length === 1) {
         this.loop();
+        return
       } else {
         let index = this.currentIndex + 1;
         if (index === this.playlist.length) {
@@ -262,8 +263,9 @@ export default {
     ready() {
       this.songReady = true;
       this.duration = this.$refs.audio.duration;
+      this.savePlayHistory(this.currentSong);
     },
-    error() {
+    error() { 
       /*当我们点击上一曲下一曲的时候，如果进入到的歌曲由于某些原因加载失败，
       ready函数永远不会执行，按钮就会失效。所以为了保证这种情况发生时可以继续使用，定义了这个方法*/
       this.songReady = true;
@@ -341,6 +343,9 @@ export default {
       this.currentSong
         .getLyric()
         .then(lyric => {
+          if(this.currentSong.lyric !== lyric){
+            return
+          }
           this.currentLyric = new Lyric(lyric, this.handleLyric);
           if (this.playing) {
             this.currentLyric.play();
@@ -450,14 +455,14 @@ export default {
         this.timer = setTimeout(() => {
           this.$refs.audio.play();
           this.getLyric();
-        }, 100); // 原来设置的间隔时间是1000ms,但是有了这个回调函数以后这个时间定时器实际上已经没有作用
+        }, 1000); // 原来设置的间隔时间是1000ms,但是有了这个回调函数以后这个时间定时器实际上已经没有作用
       });
     },
     ...mapMutations({
       setFullScreen: "SET_FULL_SCREEN",
       setPlayList: "SET_PLAYLIST"
     }),
-    ...mapActions(["saveFavoriteList", "deleteFavoriteList"])
+    ...mapActions(["saveFavoriteList", "deleteFavoriteList", "savePlayHistory"])
   },
   watch: {
     currentSong(newSong, oldSong) {
