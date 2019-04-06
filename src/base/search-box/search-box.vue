@@ -31,6 +31,7 @@ export default {
     },
     back() {
       this.$router.back();
+      this.query = "";
     },
     clear() {
       this.query = "";
