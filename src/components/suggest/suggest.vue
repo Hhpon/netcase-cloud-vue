@@ -38,6 +38,11 @@
       class="no-result-wrapper"
       v-show="!result.length&&!hasMore&&!searchSuggest.length"
     >抱歉，暂无搜索结果</div>
+    <cube-loading
+      :size="40"
+      class="loading_container"
+      v-show="!result.length&&!searchSuggest.length"
+    ></cube-loading>
   </cube-scroll>
 </template>
 
@@ -120,8 +125,6 @@ export default {
     searchMore() {
       this.offset++;
       search(this.query, this.offset).then(res => {
-        console.log(res.data);
-        console.log(this.offset);
         if (res.data.code === ERR_OK) {
           this.result = this.result.concat(
             this._normalizeSongs(res.data.result.songs)
@@ -164,7 +167,6 @@ export default {
       }
     },
     _normalizeSongs(list) {
-      console.log(list);
       let ret = [];
       if (!list) {
         return ret;
@@ -235,6 +237,11 @@ export default {
     width: 100%;
     top: 40%;
     text-align: center;
+  }
+  .loading_container {
+    display: flex;
+    justify-content: center;
+    padding-top: 100px;
   }
 }
 </style>

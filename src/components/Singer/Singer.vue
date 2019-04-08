@@ -1,5 +1,6 @@
 <template>
   <div class="singer" ref="singer">
+    <cube-loading :size="40" class="loading_container" v-show="!singers.length"></cube-loading>
     <list-view :data="singers" @select="selectSinger" ref="list"></list-view>
     <router-view></router-view>
   </div>
@@ -110,6 +111,11 @@ export default {
   top: 88px;
   bottom: 0;
   width: 100%;
+  .loading_container {
+    display: flex;
+    justify-content: center;
+    padding-top: 100px;
+  }
 }
 </style>
 

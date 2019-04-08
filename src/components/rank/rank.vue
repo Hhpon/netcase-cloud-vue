@@ -16,6 +16,7 @@
           <div>3.{{topList.tracks[2].name}}</div>
         </div>
       </div>
+      <cube-loading :size="40" class="loading_container" v-show="!topLists.length"></cube-loading>
     </cube-scroll>
     <router-view></router-view>
   </div>
@@ -69,7 +70,9 @@ export default {
   position: fixed;
   top: 88px;
   bottom: 0;
+  width: 100%;
   .rank-content {
+    width: 100%;
     height: 100%;
     .topList-container {
       height: 100px;
@@ -90,6 +93,11 @@ export default {
         flex-direction: column;
         justify-content: space-around;
       }
+    }
+    .loading_container {
+      display: flex;
+      justify-content: center;
+      padding-top: 100px;
     }
   }
 }

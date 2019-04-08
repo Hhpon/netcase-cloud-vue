@@ -5,7 +5,7 @@
         <use xlink:href="#icon-gengduo"></use>
       </svg>
     </router-link>
-    <div class="header-text">VMUSIC</div>
+    <div class="header-text">NMUSIC</div>
     <router-link to="/search">
       <svg class="icon header-imgs" aria-hidden="true">
         <use xlink:href="#icon-sousuo"></use>

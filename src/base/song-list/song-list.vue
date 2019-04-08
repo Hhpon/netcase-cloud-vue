@@ -18,6 +18,7 @@
         </div>
       </li>
     </ul>
+    <cube-loading :size="40" class="loading_container" v-show="!songs.length"></cube-loading>
   </div>
 </template>
 <script>
@@ -97,6 +98,11 @@ export default {
         @include no-row;
       }
     }
+  }
+  .loading_container {
+    display: flex;
+    justify-content: center;
+    padding-top: 100px;
   }
 }
 </style>

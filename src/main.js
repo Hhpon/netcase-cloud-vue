@@ -9,12 +9,16 @@ import 'common/icon/iconfont'
 import './registerServiceWorker'
 import fastclick from 'fastclick'
 import VueLazyLoad from 'vue-lazyload'
+import VConsole from 'vconsole'
 
 fastclick.attach(document.body) // 解决移动端点击300ms延迟
 
 Vue.use(VueLazyLoad, {
   loading: require('common/imgs/default.png')
 })
+
+/* eslint-disable no-unused-vars */
+var vConsole = new VConsole();
 
 Vue.config.productionTip = false
 

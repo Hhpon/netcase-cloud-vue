@@ -167,6 +167,7 @@ export default {
       return this.songReady ? "" : "disable";
     },
     percent() {
+      // console.log(this.currentTime,this.duration);
       return this.currentTime / this.duration;
     },
     ...mapGetters(["fullScreen", "playing", "currentIndex", "favoriteList"])
@@ -222,17 +223,19 @@ export default {
     loop() {
       this.$refs.audio.currentTime = 0;
       this.$refs.audio.play();
+      this.setPlayingState(true);
       if (this.currentLyric) {
         this.currentLyric.seek();
       }
     },
     next() {
+      console.log(this.songReady);
       if (!this.songReady) {
         return;
       }
       if (this.playlist.length === 1) {
         this.loop();
-        return
+        return;
       } else {
         let index = this.currentIndex + 1;
         if (index === this.playlist.length) {
@@ -263,9 +266,11 @@ export default {
     ready() {
       this.songReady = true;
       this.duration = this.$refs.audio.duration;
+      console.log(this.$refs.audio);
+      console.log(this.$refs.audio.duration);
       this.savePlayHistory(this.currentSong);
     },
-    error() { 
+    error() {
       /*当我们点击上一曲下一曲的时候，如果进入到的歌曲由于某些原因加载失败，
       ready函数永远不会执行，按钮就会失效。所以为了保证这种情况发生时可以继续使用，定义了这个方法*/
       this.songReady = true;
@@ -343,8 +348,8 @@ export default {
       this.currentSong
         .getLyric()
         .then(lyric => {
-          if(this.currentSong.lyric !== lyric){
-            return
+          if (this.currentSong.lyric !== lyric) {
+            return;
           }
           this.currentLyric = new Lyric(lyric, this.handleLyric);
           if (this.playing) {
@@ -454,6 +459,7 @@ export default {
         this.songUrl = res;
         this.timer = setTimeout(() => {
           this.$refs.audio.play();
+          console.log("执行play");
           this.getLyric();
         }, 1000); // 原来设置的间隔时间是1000ms,但是有了这个回调函数以后这个时间定时器实际上已经没有作用
       });

@@ -7,7 +7,7 @@
         </svg>
         <switches @switchItem="switchItem" :currentIndex="currentIndex" :switches="switches"></switches>
       </div>
-      <div class="list-wrapper" ref="listWrapper">
+      <div class="list-wrapper" ref="listWrapper" v-show='!noResult'>
         <cube-scroll ref="favoriteList" :data="favoriteList" v-if="currentIndex === 0">
           <div class="inner">
             <song-list @random="random" @select="selectItem" :songs="favoriteList"></song-list>

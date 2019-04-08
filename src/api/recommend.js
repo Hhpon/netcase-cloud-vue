@@ -1,15 +1,16 @@
 import axios from "axios";
+import { HOST } from 'common/js/config'
 
 export function getBannerList() {
-  return axios.get("http://localhost:3000/banner").then(res => {
+  return axios.get(`${HOST}/banner`).then(res => {
     return res.data;
   });
 }
 
 export function getSongList() {
-  return axios.get("http://localhost:3000/personalized");
+  return axios.get(`${HOST}/personalized`);
 }
 
 export function getNewSong() {
-  return axios.get("http://localhost:3000/personalized/newsong");
+  return axios.get(`${HOST}/personalized/newsong`);
 }
