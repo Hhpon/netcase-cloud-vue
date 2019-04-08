@@ -5,16 +5,15 @@
 
 项目演示地址: [项目演示地址](http://tea.hhp.im/),或者可以扫描下方二维码访问。
 
-![预览](./doc/img/pre.jpg)
+<img src='./doc/img/pre.jpg' height='100px' />
 
 电脑预览的话请使用 Chrome 的手机模式，刚刚进入手机模式可能无法上下滑动，刷新一下即可。
 
 ### 图片预览
 ***
 
-**推荐、排行、歌手**
-
-![推荐](./doc/img/推荐.png)![歌手](./doc/img/歌手.png)![歌手详情](./doc/img/歌手详情.png)![搜索](./doc/img/搜索.png)![播放内核](./doc/img/播放内核.png)![个人中心](./doc/img/个人中心.png)
+<img src='./doc/img/推荐.png' width='30%' /><img src='./doc/img/歌手.png' width='30%' /><img src='./doc/img/歌手详情.png' width='30%' />
+<img src='./doc/img/搜索.png' width='30%' /><img src='./doc/img/播放内核.png' width='30%' /><img src='./doc/img/个人中心.png' width='30%' />
 
 ### 感谢
 ***
